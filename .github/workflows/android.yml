@@ -2,7 +2,7 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main" ] # Change to "master" if your default branch uses that name
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -19,14 +19,27 @@ jobs:
         java-version: '17'
         cache: gradle
 
-    - name: Grant Permission to Gradle
-      run: chmod +x gradlew
-
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
+    - name: Find and Build APK
+      run: |
+        # This automatically searches for gradlew in case it is inside a subfolder
+        GRADLEW_PATH=$(find . -name "gradlew" -print -quit)
+        
+        if [ -z "$GRADLEW_PATH" ]; then
+          echo "Error: gradlew file not found anywhere in the repository!"
+          exit 1
+        fi
+        
+        # Navigate to the folder containing gradlew
+        PROJECT_DIR=$(dirname "$GRADLEW_PATH")
+        cd "$PROJECT_DIR"
+        
+        echo "Found Gradle project in: $PROJECT_DIR"
+        chmod +x gradlew
+        ./gradlew assembleDebug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: app-debug-apk
-        path: app/build/outputs/apk/debug/*.apk
+        path: |
+          **/build/outputs/apk/debug/*.apk
