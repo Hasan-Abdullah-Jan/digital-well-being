@@ -1,0 +1,70 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Read which app is open and for how long (user grants it in Settings > Usage access). -->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <!-- Show the "pause and think" screen on top of an app the user chose to limit. -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- The small, quiet service that watches for limited apps while pause screens are on. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- Turn pause screens back on after the phone restarts (only if the user had them on). -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Optional grayscale switch. Never granted automatically: only via a one-time adb command. -->
+    <uses-permission
+        android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- See launchable apps so the user can pick which ones to limit (no QUERY_ALL_PACKAGES). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
+    <application>
+        <service
+            android:name="app.lumi.guard.GuardService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Digital wellbeing: shows a pause screen when the user opens apps they chose to limit, and gentle nudges during long sessions." />
+        </service>
+
+        <activity
+            android:name="app.lumi.guard.PauseActivity"
+            android:configChanges="orientation|screenSize|screenLayout|uiMode|keyboardHidden"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/LumiPauseTheme" />
+
+        <receiver
+            android:name="app.lumi.guard.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="app.lumi.guard.QuoteWidgetProvider"
+            android:exported="true"
+            android:label="@string/lumi_widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/lumi_quote_widget_info" />
+        </receiver>
+    </application>
+</manifest>

@@ -1,0 +1,168 @@
+# Lumi CI: checks every push, tests the security rules, smoke-tests the web build
+# and builds an installable Android APK.
+#
+# Optional repository secrets (Settings > Secrets and variables > Actions):
+#   FIREBASE_API_KEY, FIREBASE_AUTH_DOMAIN, FIREBASE_PROJECT_ID, FIREBASE_STORAGE_BUCKET,
+#   FIREBASE_MESSAGING_SENDER_ID, FIREBASE_APP_ID, HELPLINE_OR_TRUSTED_CONTACT, HELPLINE_NAME,
+#   HELPLINE_TEXT_NUMBER, HELPLINE_WEBSITE, EMERGENCY_NUMBER
+# Without them the APK still works, with cloud features switched off.
+#
+# Shareable download link: run this workflow manually (Actions > CI > Run workflow) with
+# "publish_release" ticked, or push a tag like v1.0.0. The APK is attached to a GitHub Release.
+name: CI
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: 'Publish the APK as a GitHub Release (shareable download link)'
+        type: boolean
+        default: false
+      demo_only:
+        description: 'Build a demo-only APK (never connects to Firebase)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXPO_NO_TELEMETRY: '1'
+  CI: '1'
+
+jobs:
+  checks:
+    name: Typecheck, unit tests and strings
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test -- --ci
+      - run: node scripts/check-i18n.mjs
+
+  rules:
+    name: Firestore security rules
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: firebase/package-lock.json
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+        working-directory: firebase
+      - run: npm test
+        working-directory: firebase
+
+  web:
+    name: Web build and smoke test
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx expo export --platform web --clear
+      - name: Install Playwright for the smoke test
+        run: |
+          npm install --no-save playwright@1
+          npx playwright install --with-deps chromium
+      - run: node scripts/smoke-web.mjs test-results/smoke
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: web-smoke-screenshots
+          path: test-results/smoke
+          retention-days: 14
+      - uses: actions/upload-artifact@v7
+        with:
+          name: lumi-web-build
+          path: dist
+          retention-days: 14
+
+  apk:
+    name: Android APK
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v6
+      - run: npm ci
+      - name: Write config/.env from secrets (optional)
+        run: node scripts/write-env.mjs
+        env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          HELPLINE_OR_TRUSTED_CONTACT: ${{ secrets.HELPLINE_OR_TRUSTED_CONTACT }}
+          HELPLINE_NAME: ${{ secrets.HELPLINE_NAME }}
+          HELPLINE_TEXT_NUMBER: ${{ secrets.HELPLINE_TEXT_NUMBER }}
+          HELPLINE_WEBSITE: ${{ secrets.HELPLINE_WEBSITE }}
+          EMERGENCY_NUMBER: ${{ secrets.EMERGENCY_NUMBER }}
+          DEMO_MODE_ONLY: ${{ inputs.demo_only && 'true' || '' }}
+      - name: Generate the native Android project
+        run: npx expo prebuild --platform android --no-install --clean
+      - name: Give Gradle more memory
+        run: sed -i 's/-Xmx2048m/-Xmx6g/' android/gradle.properties
+      - name: Build release APK
+        working-directory: android
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=armeabi-v7a,arm64-v8a,x86_64
+      - name: Collect APK
+        run: |
+          mkdir -p out
+          cp android/app/build/outputs/apk/release/app-release.apk "out/lumi-${{ github.run_number }}.apk"
+          ls -lh out
+      - uses: actions/upload-artifact@v7
+        with:
+          name: lumi-android-apk
+          path: out/*.apk
+          retention-days: 30
+      - name: Publish a GitHub Release with the APK
+        if: startsWith(github.ref, 'refs/tags/v') || inputs.publish_release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('build-{0}', github.run_number) }}
+          name: ${{ startsWith(github.ref, 'refs/tags/v') && format('Lumi {0}', github.ref_name) || format('Lumi test build {0}', github.run_number) }}
+          prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+          files: out/*.apk
+          body: |
+            Installable Android build of Lumi.
+            1. Download the .apk below on an Android phone (Android 7 or newer).
+            2. Open it and allow "Install unknown apps" when asked.
+            This build is signed with a development key: fine for testing, not for the Play Store.

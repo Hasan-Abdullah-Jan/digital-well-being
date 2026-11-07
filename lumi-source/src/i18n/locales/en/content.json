@@ -1,0 +1,699 @@
+{
+  "concerns": [
+    { "id": "scrolling", "label": "Scrolling longer than I want", "icon": "phone-portrait-outline" },
+    { "id": "sleep", "label": "Sleep and late nights", "icon": "moon-outline" },
+    { "id": "focus", "label": "Focus and putting things off", "icon": "bulb-outline" },
+    { "id": "gaming", "label": "Gaming more than I'd like", "icon": "game-controller-outline" },
+    { "id": "comparison", "label": "Comparing myself to others", "icon": "people-outline" },
+    { "id": "escapism", "label": "Escaping into screens or fantasy", "icon": "planet-outline" },
+    { "id": "lonely", "label": "Feeling lonely or left out", "icon": "person-outline" },
+    { "id": "stress", "label": "Stress and worry", "icon": "pulse-outline" },
+    { "id": "low-mood", "label": "Feeling low or flat", "icon": "cloudy-outline" },
+    { "id": "harassment", "label": "Mean messages or bullying online", "icon": "chatbubble-ellipses-outline" },
+    { "id": "content", "label": "Seeing upsetting things online", "icon": "eye-off-outline" }
+  ],
+  "goals": [
+    { "id": "scroll-less", "label": "Scroll less, live more", "description": "Spend your time on purpose, not on autopilot.", "icon": "hourglass-outline" },
+    { "id": "sleep-better", "label": "Sleep better", "description": "Wind down and protect your nights.", "icon": "bed-outline" },
+    { "id": "focus", "label": "Focus and get things done", "description": "Fewer distractions, more progress.", "icon": "flash-outline" },
+    { "id": "game-balance", "label": "Game in balance", "description": "Enjoy games without losing your day.", "icon": "game-controller-outline" },
+    { "id": "self-worth", "label": "Feel better about myself", "description": "Less comparing, more kindness to you.", "icon": "heart-outline" },
+    { "id": "connect", "label": "Feel more connected", "description": "More real-life moments with people.", "icon": "people-outline" },
+    { "id": "calm", "label": "Feel calmer", "description": "Tools for stress, worry and big feelings.", "icon": "leaf-outline" },
+    { "id": "safe-online", "label": "Stay safe online", "description": "Know what to do if things go wrong.", "icon": "shield-checkmark-outline" }
+  ],
+  "quotes": [
+    { "id": "q1", "text": "Your attention is precious. Spend it on things that love you back.", "tags": ["scroll-less", "focus"] },
+    { "id": "q2", "text": "Scrolling can wait. This moment won't come again.", "tags": ["scroll-less", "connect"] },
+    { "id": "q3", "text": "You don't have to catch up on everything. You're allowed to just be here.", "tags": ["scroll-less", "calm"] },
+    { "id": "q4", "text": "Small steps still move you forward.", "tags": ["focus", "self-worth"] },
+    { "id": "q5", "text": "Rest is not a reward. It's something you need.", "tags": ["sleep-better", "calm"] },
+    { "id": "q6", "text": "Tonight's sleep is tomorrow's energy.", "tags": ["sleep-better"] },
+    { "id": "q7", "text": "The feed never ends. Your evening can.", "tags": ["sleep-better", "scroll-less"] },
+    { "id": "q8", "text": "Start with five minutes. Starting is the hardest part.", "tags": ["focus"] },
+    { "id": "q9", "text": "Done is better than perfect.", "tags": ["focus", "self-worth"] },
+    { "id": "q10", "text": "One focused hour can beat a whole distracted day.", "tags": ["focus"] },
+    { "id": "q11", "text": "Games are better when you choose when to stop.", "tags": ["game-balance"] },
+    { "id": "q12", "text": "Your real-life story needs you as the main character.", "tags": ["game-balance", "connect"] },
+    { "id": "q13", "text": "Every level you beat offline counts too.", "tags": ["game-balance"] },
+    { "id": "q14", "text": "Comparison steals joy. Curiosity brings it back.", "tags": ["self-worth"] },
+    { "id": "q15", "text": "You are more than a number of likes.", "tags": ["self-worth"] },
+    { "id": "q16", "text": "Be as kind to yourself as you are to your friends.", "tags": ["self-worth", "calm"] },
+    { "id": "q17", "text": "Your pace is your pace. It's not a race.", "tags": ["self-worth", "focus"] },
+    { "id": "q18", "text": "A real conversation can change your whole day.", "tags": ["connect"] },
+    { "id": "q19", "text": "Reach out. Someone may be hoping to hear from you too.", "tags": ["connect"] },
+    { "id": "q20", "text": "The people who matter see more than your posts.", "tags": ["connect", "self-worth"] },
+    { "id": "q21", "text": "Breathe in. Breathe out. You've handled hard days before.", "tags": ["calm"] },
+    { "id": "q22", "text": "Feelings are visitors. They come, and they go.", "tags": ["calm"] },
+    { "id": "q23", "text": "It's okay to not be okay. It's brave to ask for help.", "tags": ["calm", "self-worth"] },
+    { "id": "q24", "text": "You can't control everything. You can control your next small step.", "tags": ["calm", "focus"] },
+    { "id": "q25", "text": "You decide who gets space in your feed and in your head.", "tags": ["safe-online", "self-worth"] },
+    { "id": "q26", "text": "Blocking someone who hurts you is self-respect, not drama.", "tags": ["safe-online"] },
+    { "id": "q27", "text": "If something online feels wrong, trust that feeling and talk to someone.", "tags": ["safe-online"] },
+    { "id": "q28", "text": "Your phone is a tool. You are the one holding it.", "tags": ["scroll-less", "focus"] },
+    { "id": "q29", "text": "Look up. There's a whole world at eye level.", "tags": ["scroll-less", "connect"] },
+    { "id": "q30", "text": "Boredom is where ideas begin.", "tags": ["scroll-less", "focus"] },
+    { "id": "q31", "text": "A slip is not a fail. It's information. Begin again.", "tags": ["scroll-less", "game-balance", "focus"] },
+    { "id": "q32", "text": "Progress, not perfection.", "tags": ["focus", "self-worth", "game-balance"] },
+    { "id": "q33", "text": "Protect your mornings and your mornings will protect your day.", "tags": ["sleep-better", "focus"] },
+    { "id": "q34", "text": "You don't need everyone to like you. You need to like being you.", "tags": ["self-worth"] },
+    { "id": "q35", "text": "Real life loads slower, but it lasts longer.", "tags": ["connect", "scroll-less"] },
+    { "id": "q36", "text": "Kindness online starts with how you talk to yourself.", "tags": ["self-worth", "safe-online"] },
+    { "id": "q37", "text": "You are allowed to log off.", "tags": ["calm", "scroll-less", "safe-online"] },
+    { "id": "q38", "text": "One good night's sleep can make a big problem look smaller.", "tags": ["sleep-better", "calm"] },
+    { "id": "q39", "text": "Choose one thing. Do it well. Then rest.", "tags": ["focus", "calm"] },
+    { "id": "q40", "text": "The best moments rarely happen on a screen.", "tags": ["connect", "game-balance"] }
+  ],
+  "realityCards": [
+    { "id": "highlight-reel", "title": "It's a highlight reel", "body": "Most posts show someone's best moment from a whole week. You're comparing your everyday to their best 1%.", "tip": "Next time you compare, add: \"...but I'm only seeing their highlights.\"" },
+    { "id": "filters", "title": "Filters and edits are everywhere", "body": "Many photos are filtered, edited, posed or taken 50 times. Real skin has texture and real bodies change.", "tip": "Try following a few accounts that show real, unedited life." },
+    { "id": "algorithm", "title": "The feed loves extremes", "body": "Apps show whatever keeps people watching: the most perfect, shocking or dramatic content. That's not what normal life looks like.", "tip": "Tap \"Not interested\" on content that makes you feel worse." },
+    { "id": "slot-machine", "title": "Refreshing is by design", "body": "Pull-to-refresh, likes and endless feeds work a bit like slot machines: you never know what's next, so you keep checking. That pull is the design, not a weakness in you.", "tip": "Turn off notifications for apps you check too often." },
+    { "id": "business", "title": "Perfect lives can be businesses", "body": "Many influencers have sponsors, editors, lighting and a plan. It's work, presented as everyday life.", "tip": "Ask: \"Is someone being paid to make this look easy?\"" },
+    { "id": "boring-bits", "title": "Nobody posts the boring bits", "body": "Everyone has dull days, awkward moments and messy rooms. They just don't film them.", "tip": "Remind yourself: ordinary is normal." },
+    { "id": "followers", "title": "Followers aren't friends", "body": "A few people who really know you matter more than a big number of people who scroll past.", "tip": "Message one person who knows the real you." },
+    { "id": "hidden-struggles", "title": "You can't see their hard days", "body": "People who look happy online can be lonely, stressed or struggling too.", "tip": "Be kind in comments. You never know what someone is carrying." },
+    { "id": "compare-yourself", "title": "Compare with past you", "body": "The only fair comparison is you versus you, a little while ago. What have you learned or survived since then?", "tip": "Write one thing you can do now that you couldn't a year ago." },
+    { "id": "fomo", "title": "FOMO fades", "body": "Missing a post, trend or party feels huge in the moment. A week later, you probably won't remember it.", "tip": "Ask: \"Will this matter next week?\"" },
+    { "id": "worth", "title": "Your worth isn't a number", "body": "Likes, views and streaks measure attention for a few seconds. They don't measure who you are.", "tip": "Try hiding like counts if your app allows it." },
+    { "id": "ai-fakes", "title": "AI can fake almost anything", "body": "Photos, voices and videos can now be made or changed with AI. Seeing is no longer believing.", "tip": "Check where something came from before you believe or share it." },
+    { "id": "diversity", "title": "Real people look different", "body": "People come in every shape, size, colour, ability and style. Feeds often show a very narrow slice.", "tip": "Follow creators who look and live in many different ways." },
+    { "id": "loud-few", "title": "Online anger is louder", "body": "A few loud voices can make it look like \"everyone\" thinks something. Most people are kinder in real life.", "tip": "You don't have to join every argument. Muting is allowed." },
+    { "id": "game-worlds", "title": "Game worlds are built to pull you in", "body": "Daily rewards, loot, levels and streaks are designed by experts to keep you playing a bit longer.", "tip": "Decide your stopping point before you start playing." },
+    { "id": "slow-real-life", "title": "Real life is slower, and that's okay", "body": "Skills, friendships and confidence take time to grow. Fast rewards online can make real progress feel slow, even when it's happening.", "tip": "Notice one small real-life win today." }
+  ],
+  "swaps": [
+    { "id": "stretch", "text": "Stretch your arms, neck and back", "minutes": 2, "energy": "low", "together": false },
+    { "id": "water", "text": "Drink a glass of water", "minutes": 2, "energy": "low", "together": false },
+    { "id": "window", "text": "Look out of a window and notice five things", "minutes": 2, "energy": "low", "together": false },
+    { "id": "breaths", "text": "Take five slow breaths", "minutes": 2, "energy": "low", "together": false },
+    { "id": "tidy-one", "text": "Tidy one small thing", "minutes": 2, "energy": "low", "together": false },
+    { "id": "fresh-air", "text": "Step outside for some fresh air", "minutes": 5, "energy": "low", "together": false },
+    { "id": "one-song", "text": "Listen to one song you love, eyes closed", "minutes": 5, "energy": "low", "together": false },
+    { "id": "jumping", "text": "Do 20 jumping jacks or dance to one song", "minutes": 3, "energy": "high", "together": false },
+    { "id": "look-forward", "text": "Write down one thing you're looking forward to", "minutes": 2, "energy": "low", "together": false },
+    { "id": "walk", "text": "Go for a short walk", "minutes": 10, "energy": "high", "together": false },
+    { "id": "text-friend", "text": "Call or message someone you like", "minutes": 10, "energy": "low", "together": true },
+    { "id": "doodle", "text": "Doodle, draw or colour something", "minutes": 10, "energy": "low", "together": false },
+    { "id": "read", "text": "Read a few pages of a book or comic", "minutes": 10, "energy": "low", "together": false },
+    { "id": "snack", "text": "Make yourself a snack or a warm drink", "minutes": 10, "energy": "low", "together": false },
+    { "id": "pet", "text": "Spend time with a pet or a plant", "minutes": 10, "energy": "low", "together": false },
+    { "id": "desk", "text": "Reset your desk or room for tomorrow", "minutes": 10, "energy": "high", "together": false },
+    { "id": "practise", "text": "Practise an instrument, sport or skill", "minutes": 15, "energy": "high", "together": false },
+    { "id": "journal", "text": "Write a few lines in your journal", "minutes": 10, "energy": "low", "together": false },
+    { "id": "workout", "text": "Do a short workout or stretch routine", "minutes": 15, "energy": "high", "together": false },
+    { "id": "family-chat", "text": "Chat with someone at home", "minutes": 10, "energy": "low", "together": true },
+    { "id": "cook", "text": "Cook or bake something new", "minutes": 45, "energy": "high", "together": true },
+    { "id": "meet-friend", "text": "Meet a friend in person", "minutes": 60, "energy": "high", "together": true },
+    { "id": "ride-run", "text": "Go for a bike ride, run or swim", "minutes": 30, "energy": "high", "together": false },
+    { "id": "puzzle", "text": "Start a puzzle or a board game", "minutes": 30, "energy": "low", "together": true },
+    { "id": "create", "text": "Work on a creative project", "minutes": 30, "energy": "high", "together": false },
+    { "id": "help", "text": "Help someone with a task", "minutes": 20, "energy": "high", "together": true },
+    { "id": "learn", "text": "Learn something new without a screen", "minutes": 30, "energy": "low", "together": false },
+    { "id": "place", "text": "Visit a library, park or community space", "minutes": 45, "energy": "high", "together": false }
+  ],
+  "challenges": [
+    { "id": "phone-free-morning", "kind": "detox", "title": "Phone-free first hour", "description": "Don't check your phone for the first hour after you wake up.", "days": 5, "icon": "sunny-outline", "tips": ["Use a real alarm clock or put your phone across the room.", "Have something else ready: music, breakfast, a book."] },
+    { "id": "phone-free-meals", "kind": "detox", "title": "Phone-free meals", "description": "Eat your meals without a phone at the table.", "days": 7, "icon": "restaurant-outline", "tips": ["Leave it in another room or face down.", "Ask the people you eat with to join you."] },
+    { "id": "quiet-notifications", "kind": "detox", "title": "Quiet notifications", "description": "Keep non-essential notifications off for a week.", "days": 7, "icon": "notifications-off-outline", "tips": ["Keep calls and messages from close people on.", "Check apps when you choose, not when they call you."] },
+    { "id": "social-break-day", "kind": "detox", "title": "Social media break day", "description": "One whole day without social apps.", "days": 1, "icon": "cafe-outline", "tips": ["Tell friends how to reach you.", "Plan something fun for the day."] },
+    { "id": "bedroom-phone-free", "kind": "detox", "title": "Phone sleeps outside", "description": "Charge your phone outside your bedroom at night.", "days": 5, "icon": "bed-outline", "tips": ["Use a cheap alarm clock.", "Put a book or journal by your bed instead."] },
+    { "id": "one-app-pause", "kind": "detox", "title": "One-app pause", "description": "Pick one app that pulls you in and take a week off it.", "days": 7, "icon": "pause-circle-outline", "tips": ["Move it off your home screen or log out.", "Notice what you do instead."] },
+    { "id": "intentional-unlock", "kind": "detox", "title": "Unlock on purpose", "description": "Before each unlock, ask yourself: \"What am I here to do?\"", "days": 3, "icon": "key-outline", "tips": ["Turn on Lumi's pause screen for your most-used app.", "If you can't answer, put the phone down for a minute."] },
+    { "id": "unplugged-game-night", "kind": "offline", "title": "Game night, unplugged", "description": "Play a board, card or dice game with someone.", "days": 1, "icon": "dice-outline", "tips": ["No board games at home? Try cards, charades or a paper game."] },
+    { "id": "outdoor-hour", "kind": "offline", "title": "Outdoor hour", "description": "Spend an hour outside doing anything you enjoy.", "days": 3, "icon": "partly-sunny-outline", "tips": ["Walk, sit in a park, play a sport, explore your area."] },
+    { "id": "make-something", "kind": "offline", "title": "Make something real", "description": "Build, draw, cook, sew, write or fix something offline.", "days": 1, "icon": "construct-outline", "tips": ["Start tiny. A doodle counts."] },
+    { "id": "level-up-irl", "kind": "offline", "title": "Level up in real life", "description": "Practise a real-world skill for 15 minutes a day.", "days": 5, "icon": "trending-up-outline", "tips": ["Music, cooking, a language, a sport, drawing. Track your XP in a notebook."] },
+    { "id": "paper-game", "kind": "offline", "title": "Design a game on paper", "description": "Invent a game with simple rules on paper and play it with someone.", "days": 1, "icon": "document-text-outline", "tips": ["Use dice, coins or cards. Give it a silly name."] },
+    { "id": "movement-quest", "kind": "offline", "title": "Movement quest", "description": "Do 20 minutes of movement you enjoy.", "days": 5, "icon": "walk-outline", "tips": ["Dancing in your room counts."] },
+    { "id": "side-quest-help", "kind": "offline", "title": "Side quest: help someone", "description": "Do one helpful thing for someone each day.", "days": 3, "icon": "hand-left-outline", "tips": ["Carry something, explain homework, cook, listen."] }
+  ],
+  "nudges": [
+    { "id": "voice-note", "text": "Send a voice note to someone you miss." },
+    { "id": "really-doing", "text": "Ask a friend how they're really doing, and listen." },
+    { "id": "walk-invite", "text": "Invite someone for a walk this week." },
+    { "id": "meal-together", "text": "Share a meal with someone, phones away." },
+    { "id": "thank-you", "text": "Say thank you to someone who helped you." },
+    { "id": "join-group", "text": "Look for a club, team, class or group you could try." },
+    { "id": "old-friend", "text": "Message an old friend with a memory you share." },
+    { "id": "home-time", "text": "Spend 10 minutes doing something with someone at home." },
+    { "id": "compliment", "text": "Give someone a compliment that isn't about looks." },
+    { "id": "weekend-plan", "text": "Make a plan for something fun this weekend." },
+    { "id": "say-hi", "text": "Say hi to someone new, or sit with someone different." },
+    { "id": "offer-help", "text": "Offer to help someone with something." },
+    { "id": "call", "text": "Call someone instead of texting today." },
+    { "id": "share-made", "text": "Show someone you trust something you made." },
+    { "id": "quiet-friend", "text": "Check in on someone who's been quiet lately." },
+    { "id": "play-together", "text": "Play a game together in the same room." }
+  ],
+  "emotions": [
+    { "id": "calm", "label": "Calm" },
+    { "id": "happy", "label": "Happy" },
+    { "id": "grateful", "label": "Grateful" },
+    { "id": "hopeful", "label": "Hopeful" },
+    { "id": "proud", "label": "Proud" },
+    { "id": "excited", "label": "Excited" },
+    { "id": "tired", "label": "Tired" },
+    { "id": "bored", "label": "Bored" },
+    { "id": "stressed", "label": "Stressed" },
+    { "id": "anxious", "label": "Anxious" },
+    { "id": "lonely", "label": "Lonely" },
+    { "id": "sad", "label": "Sad" },
+    { "id": "angry", "label": "Angry" },
+    { "id": "overwhelmed", "label": "Overwhelmed" },
+    { "id": "left-out", "label": "Left out" },
+    { "id": "numb", "label": "Numb" }
+  ],
+  "moodLevels": [
+    { "score": 1, "label": "Rough", "icon": "emoticon-cry-outline" },
+    { "score": 2, "label": "Low", "icon": "emoticon-sad-outline" },
+    { "score": 3, "label": "Okay", "icon": "emoticon-neutral-outline" },
+    { "score": 4, "label": "Good", "icon": "emoticon-happy-outline" },
+    { "score": 5, "label": "Great", "icon": "emoticon-excited-outline" }
+  ],
+  "journalPrompts": {
+    "gratitude": [
+      "Something small that made today better...",
+      "Someone I'm glad is in my life...",
+      "Something my body let me do today...",
+      "A place where I feel calm...",
+      "Something I'm looking forward to..."
+    ],
+    "win": [
+      "Something I did today that took courage...",
+      "A moment I handled better than before...",
+      "Something I learned...",
+      "A time I helped someone...",
+      "Something I finished, even a tiny thing..."
+    ],
+    "reflection": [
+      "What's taking up space in my head right now?",
+      "When did I feel most like myself this week?",
+      "What drained my energy? What gave me energy?",
+      "What would I tell a friend in my situation?",
+      "What do I need more of right now?"
+    ],
+    "worry": [
+      "What's worrying me is...",
+      "The part I can control is...",
+      "What I can let go of for tonight is..."
+    ]
+  },
+  "breathing": [
+    {
+      "id": "calm",
+      "name": "Calm breath",
+      "description": "Longer out-breaths help your body relax. In for 4, out for 6.",
+      "rounds": 6,
+      "steps": [
+        { "phase": "in", "label": "Breathe in", "seconds": 4 },
+        { "phase": "out", "label": "Breathe out", "seconds": 6 }
+      ]
+    },
+    {
+      "id": "box",
+      "name": "Box breathing",
+      "description": "Steady and grounding. In 4, hold 4, out 4, hold 4.",
+      "rounds": 4,
+      "steps": [
+        { "phase": "in", "label": "Breathe in", "seconds": 4 },
+        { "phase": "hold", "label": "Hold", "seconds": 4 },
+        { "phase": "out", "label": "Breathe out", "seconds": 4 },
+        { "phase": "hold", "label": "Hold", "seconds": 4 }
+      ]
+    },
+    {
+      "id": "478",
+      "name": "4-7-8 breathing",
+      "description": "Nice before sleep. In 4, hold 7, out slowly for 8. Skip the hold if it feels uncomfortable.",
+      "rounds": 4,
+      "steps": [
+        { "phase": "in", "label": "Breathe in", "seconds": 4 },
+        { "phase": "hold", "label": "Hold", "seconds": 7 },
+        { "phase": "out", "label": "Breathe out", "seconds": 8 }
+      ]
+    }
+  ],
+  "grounding": [
+    { "count": 5, "sense": "see", "prompt": "Name 5 things you can see." },
+    { "count": 4, "sense": "touch", "prompt": "Notice 4 things you can feel or touch." },
+    { "count": 3, "sense": "hear", "prompt": "Listen for 3 things you can hear." },
+    { "count": 2, "sense": "smell", "prompt": "Find 2 things you can smell, or 2 smells you like." },
+    { "count": 1, "sense": "kind", "prompt": "Say 1 kind thing to yourself." }
+  ],
+  "muscleRelax": [
+    "Sit or lie down comfortably. Let your shoulders drop.",
+    "Squeeze your hands into fists for 5 seconds... then let go. Notice the difference.",
+    "Lift your shoulders up to your ears for 5 seconds... then let them fall.",
+    "Scrunch your face tight for 5 seconds... then soften it.",
+    "Press your feet into the floor for 5 seconds... then relax them.",
+    "Take one slow breath and notice how your body feels now."
+  ],
+  "windDown": [
+    { "id": "dim", "text": "Dim the lights and turn the screen brightness down" },
+    { "id": "charge-away", "text": "Put your phone on charge away from your bed" },
+    { "id": "tomorrow", "text": "Get ready for tomorrow (bag, clothes, plan)" },
+    { "id": "worry-dump", "text": "Write down anything on your mind" },
+    { "id": "wash", "text": "Wash up and get comfy" },
+    { "id": "read", "text": "Read, listen to calm music or stretch" },
+    { "id": "breathe", "text": "Do a 2-minute breathing exercise" }
+  ],
+  "guides": [
+    {
+      "id": "report-block",
+      "category": "safety",
+      "icon": "shield-outline",
+      "minutes": 3,
+      "title": "Block, report, save evidence",
+      "summary": "What to do when someone is mean, threatening or won't leave you alone online.",
+      "sections": [
+        { "heading": "First: it's not your fault", "body": "Nobody deserves to be harassed, threatened or embarrassed online. You don't have to reply, and you don't have to handle it alone." },
+        { "heading": "1. Pause before you reply", "body": "Replying or getting back at them often makes things worse. It's okay to stay silent." },
+        { "heading": "2. Save evidence", "body": "Before you block, keep a record so you can show someone later.", "bullets": ["Screenshot messages, posts and comments, including the username and the date.", "Copy links to profiles or posts.", "Write down what happened and when. You can use Lumi's private evidence log.", "Never forward or save sexual images of anyone under 18, even as evidence. Write down where they are and report them instead."] },
+        { "heading": "3. Block or mute", "body": "Blocking stops them contacting you. Muting or restricting hides them without them knowing. Both are allowed and both are smart." },
+        { "heading": "4. Report it", "body": "On most apps you can tap the three dots (⋯), press and hold a message, or open the profile to find Report. Reports are usually anonymous." },
+        { "heading": "5. Tell someone you trust", "body": "A friend, family member, teacher, coach or youth worker can help you decide what to do next. If you've been threatened or feel unsafe, contact emergency services or a helpline." }
+      ]
+    },
+    {
+      "id": "cyberbullying",
+      "category": "safety",
+      "icon": "chatbubbles-outline",
+      "minutes": 3,
+      "title": "Cyberbullying: spot it, stop it",
+      "summary": "What it looks like, how to respond, and how to help a friend.",
+      "sections": [
+        { "heading": "What it can look like", "body": "Bullying online is repeated behaviour meant to hurt someone.", "bullets": ["Mean messages, comments or memes", "Leaving someone out of chats on purpose", "Spreading rumours or private information", "Pretending to be someone else", "Sharing embarrassing photos or videos"] },
+        { "heading": "If it's happening to you", "body": "Save evidence, block, report and tell someone you trust. What they do says something about them, not about you." },
+        { "heading": "If it's happening to a friend", "body": "Be an upstander, not a bystander.", "bullets": ["Don't like, share or laugh along.", "Message your friend privately: \"I saw that. Are you okay?\"", "Help them report it or tell a trusted adult.", "Report it yourself. Reports are usually anonymous."] },
+        { "heading": "If you've been unkind", "body": "Everyone makes mistakes. Delete it, apologise if it's safe to, and think about what was going on for you. Talking to someone can help." }
+      ]
+    },
+    {
+      "id": "image-abuse",
+      "category": "safety",
+      "icon": "image-outline",
+      "minutes": 4,
+      "title": "Pressure for photos and image threats",
+      "summary": "If someone pressures you for intimate images or threatens to share photos of you.",
+      "sections": [
+        { "heading": "It is not your fault", "body": "If someone pressures you for nude or sexual images, or threatens to share images of you unless you do something (sometimes called sextortion), the person doing it is the one in the wrong. You can get help, even if you sent something before." },
+        { "heading": "What to do right now", "bullets": ["Stop replying. Don't send more images or money: it rarely makes them stop.", "Don't delete the chat yet. Screenshot their profile, username and messages.", "Block and report the account on the platform.", "Tell a trusted adult or contact a helpline. People who work with young people deal with this often and want to help."] },
+        { "heading": "Getting images taken down", "body": "Platforms remove intimate images shared without consent. Free services can also help: for under-18s, Take It Down (takeitdown.ncmec.org) and for adults, StopNCII.org work with many platforms to stop images being shared." },
+        { "heading": "Consent always matters", "body": "Sharing someone else's intimate image without their consent is a serious harm, and in many places it is a crime. If someone sends you one, don't share it. Delete it and report it." }
+      ]
+    },
+    {
+      "id": "grooming",
+      "category": "safety",
+      "icon": "warning-outline",
+      "minutes": 3,
+      "title": "Red flags in online friendships",
+      "summary": "Signs someone online may be trying to manipulate you.",
+      "sections": [
+        { "heading": "Trust your gut", "body": "Most people online are who they say they are, but some pretend in order to manipulate. These are warning signs, especially together:", "bullets": ["Lots of compliments, attention or gifts very quickly", "Asking you to keep the friendship secret", "Wanting to move to a private or disappearing-message app", "Asking for photos, your location or personal details", "Trying to turn you against friends or family", "Getting angry or guilt-tripping when you say no"] },
+        { "heading": "What you can do", "body": "You can stop talking to anyone, any time, without explaining. Save the chat, block, report and tell someone you trust. Never meet someone from online alone; if you do meet, choose a public place and bring a trusted adult." }
+      ]
+    },
+    {
+      "id": "upsetting-content",
+      "category": "safety",
+      "icon": "eye-off-outline",
+      "minutes": 3,
+      "title": "If you see something upsetting",
+      "summary": "Violent, sexual, hateful or self-harm content can show up unexpectedly. Here's what helps.",
+      "sections": [
+        { "heading": "You can close it", "body": "You don't have to finish watching. Close the app, look away, take a breath. Seeing it was not your fault." },
+        { "heading": "Talk about it", "body": "Upsetting images can stick in your mind. Telling someone you trust usually makes them feel smaller. The grounding exercise in Lumi can help if it keeps coming back." },
+        { "heading": "Report and filter", "bullets": ["Report the post so fewer people see it.", "Tap \"Not interested\" or \"Show less\" to change your feed.", "Turn on sensitive-content filters or restricted modes in your apps.", "Mute words, hashtags or accounts that lead to that content."] },
+        { "heading": "Content about self-harm or suicide", "body": "If you see content like this and it brings up difficult feelings, please reach out to someone. Use the Help button in Lumi any time." }
+      ]
+    },
+    {
+      "id": "scams",
+      "category": "safety",
+      "icon": "alert-circle-outline",
+      "minutes": 2,
+      "title": "Scams and fake accounts",
+      "summary": "How to spot tricks that try to get your money, codes or accounts.",
+      "sections": [
+        { "heading": "Common tricks", "bullets": ["\"You've won!\" giveaways that ask for details or payment", "Someone asking for a code sent to your phone", "Free game currency or skins if you log in on a strange site", "Urgent messages: \"Act now or your account will be deleted\"", "A friend's account suddenly asking for money"] },
+        { "heading": "Stay safe", "body": "Never share passwords or login codes, even with friends. Check links before tapping. If a friend asks for money, check with them another way. If you've been tricked, change your password, tell someone and report it. It happens to adults too." }
+      ]
+    },
+    {
+      "id": "deepfakes",
+      "category": "safety",
+      "icon": "scan-outline",
+      "minutes": 2,
+      "title": "AI fakes and edited images",
+      "summary": "Images, voices and videos can be faked. What to do if it happens to you.",
+      "sections": [
+        { "heading": "Seeing isn't believing", "body": "AI tools can create realistic photos, voices and videos of real people. Check the source before believing or sharing something shocking." },
+        { "heading": "If someone makes a fake of you", "body": "It's not your fault, and it's not okay. Save evidence, report it to the platform, and tell a trusted adult. Image-removal services like Take It Down (under 18) or StopNCII.org (18+) can help with intimate fakes." },
+        { "heading": "Don't make or share fakes of others", "body": "Even as a joke, fake images can hurt people badly and can be illegal." }
+      ]
+    },
+    {
+      "id": "consent",
+      "category": "safety",
+      "icon": "hand-right-outline",
+      "minutes": 3,
+      "title": "Digital consent and healthy relationships",
+      "summary": "Asking first, respecting no, and spotting controlling behaviour.",
+      "sections": [
+        { "heading": "Ask before you share", "body": "Before posting a photo of someone, tagging them, or forwarding their message, ask: \"Is it okay if I share this?\" A no is a no, and a yes can change later." },
+        { "heading": "Healthy looks like", "bullets": ["Respecting each other's privacy and passwords", "Being free to have your own friends and time", "No pressure to send photos or reply instantly", "Feeling safe to say no"] },
+        { "heading": "Controlling looks like", "bullets": ["Checking your phone or demanding passwords", "Tracking your location without agreement", "Getting angry if you don't reply fast", "Pressuring you to send photos"] },
+        { "heading": "If something feels off", "body": "You deserve to feel safe. Talk to someone you trust or a helpline. Use the quiz below to practise." }
+      ]
+    },
+    {
+      "id": "privacy-checkup",
+      "category": "privacy",
+      "icon": "lock-closed-outline",
+      "minutes": 5,
+      "title": "Privacy check-up",
+      "summary": "A quick checklist to make your accounts safer. Tick things off as you go.",
+      "sections": [
+        { "heading": "Why bother?", "body": "The fewer strangers can see about you, the fewer chances they have to bother you. These settings are usually under Settings > Privacy in each app." }
+      ],
+      "checklist": [
+        { "id": "private-account", "text": "Set accounts to private (or friends only)" },
+        { "id": "who-messages", "text": "Choose who can message, comment or add you" },
+        { "id": "location-posts", "text": "Turn off location on posts and photos" },
+        { "id": "live-location", "text": "Stop sharing live location with people you don't fully trust" },
+        { "id": "online-status", "text": "Hide your online or last-seen status" },
+        { "id": "tag-review", "text": "Turn on tag and mention approval" },
+        { "id": "two-factor", "text": "Turn on two-step verification" },
+        { "id": "passwords", "text": "Use different passwords for important accounts" },
+        { "id": "app-permissions", "text": "Review which apps can use your camera, mic, contacts and location" },
+        { "id": "old-posts", "text": "Check old posts for things like your school, address or routine" }
+      ]
+    },
+    {
+      "id": "passwords",
+      "category": "privacy",
+      "icon": "key-outline",
+      "minutes": 2,
+      "title": "Keep your accounts yours",
+      "summary": "Simple habits that stop people getting into your accounts.",
+      "sections": [
+        { "heading": "Strong and different", "body": "Use a long passphrase (like four random words) and a different one for each important account. A password manager can remember them for you." },
+        { "heading": "Codes are private", "body": "Never share login codes or passwords, not even with a best friend or partner. Real companies never ask for them." },
+        { "heading": "Shared devices", "body": "Log out on shared or school computers, and don't let browsers save passwords there." }
+      ]
+    },
+    {
+      "id": "scrolling-trap",
+      "category": "habits",
+      "icon": "infinite-outline",
+      "minutes": 3,
+      "title": "How the scrolling trap works",
+      "summary": "Why it's so hard to stop, and what makes it easier.",
+      "sections": [
+        { "heading": "It's designed this way", "body": "Endless feeds, autoplay and notifications remove natural stopping points. Unpredictable rewards (a funny video, a like) make your brain want \"just one more\". It's not a lack of willpower." },
+        { "heading": "Add stopping points back", "bullets": ["Turn off autoplay and most notifications", "Move tempting apps off your home screen", "Use Lumi's pause screen or a daily limit", "Try grayscale: colour makes apps more attractive", "Set phone-free times for meals, study and sleep"] },
+        { "heading": "Swap, don't just stop", "body": "Scrolling often fills boredom, stress or loneliness. Having a ready swap (music, a walk, messaging a friend) makes it easier to put the phone down." }
+      ]
+    },
+    {
+      "id": "comparison",
+      "category": "habits",
+      "icon": "people-circle-outline",
+      "minutes": 3,
+      "title": "Comparing yourself online",
+      "summary": "Why feeds can make you feel \"not enough\", and how to feel better.",
+      "sections": [
+        { "heading": "Why it happens", "body": "Humans naturally compare. Online, we compare our everyday lives to thousands of edited highlights, which isn't a fair contest." },
+        { "heading": "Notice the feeling", "body": "After scrolling, ask: \"Do I feel better or worse?\" Lumi's mood-after-scrolling check-in helps you spot patterns." },
+        { "heading": "Shape your feed", "bullets": ["Mute or unfollow accounts that make you feel bad (they won't know)", "Follow people who inspire, teach or make you laugh", "Hide like counts if you can", "Use the reality-check cards when comparison hits"] }
+      ]
+    },
+    {
+      "id": "escapism",
+      "category": "habits",
+      "icon": "planet-outline",
+      "minutes": 3,
+      "title": "When escaping goes too far",
+      "summary": "Stories, games and daydreams are good for you, until they replace your life.",
+      "sections": [
+        { "heading": "Imagination is healthy", "body": "Getting lost in a game, a show or a daydream can be fun and help you recharge. Needing a break from hard feelings is human." },
+        { "heading": "Signs it might be too much", "bullets": ["Losing sleep, skipping meals, school or plans to stay in it", "Feeling worse, empty or irritable when you stop", "Real life starting to feel unbearable in comparison", "Using it to avoid a problem that keeps growing"] },
+        { "heading": "Small steps back", "body": "Set times for your favourite worlds, and add one small real-life thing you enjoy each day. If escaping is how you cope with something painful, talking to someone can really help." }
+      ]
+    },
+    {
+      "id": "gaming-design",
+      "category": "habits",
+      "icon": "game-controller-outline",
+      "minutes": 3,
+      "title": "Why games are hard to stop",
+      "summary": "Game design tricks and simple ways to stay in control.",
+      "sections": [
+        { "heading": "The hooks", "bullets": ["Daily rewards and login streaks", "Loot boxes and random drops (like gambling)", "Battle passes with time limits", "\"Just one more match\" with no natural ending", "Friends waiting for you in a squad"] },
+        { "heading": "Stay in control", "bullets": ["Decide when you'll stop before you start", "Use Lumi's session timer and \"last round\" warning", "Set a weekly gaming budget", "Stop at a natural break, not in the middle of a match", "Avoid spending money when you're tired or upset", "Notice how you feel after playing"] },
+        { "heading": "When to get help", "body": "If gaming causes problems with sleep, school, money or relationships, and you can't cut down even when you want to, talk to a trusted adult or a professional." }
+      ]
+    },
+    {
+      "id": "feed-cleanup",
+      "category": "habits",
+      "icon": "filter-outline",
+      "minutes": 2,
+      "title": "Feed spring-clean",
+      "summary": "Mute and unfollow reminders to make your feed kinder.",
+      "sections": [
+        { "heading": "A 10-minute clean-up", "bullets": ["Scroll your following list. For each account ask: \"Does this make me feel better or worse?\"", "Mute or unfollow the \"worse\" ones. Muting is invisible.", "Mute words or hashtags that upset you.", "Tap \"Not interested\" on content you don't want.", "Follow 3 accounts that make you laugh, learn or feel inspired."] },
+        { "heading": "Make it a habit", "body": "Feeds drift over time. A monthly clean-up keeps them working for you." }
+      ],
+      "checklist": [
+        { "id": "review-following", "text": "Reviewed who I follow" },
+        { "id": "muted-worse", "text": "Muted or unfollowed accounts that make me feel worse" },
+        { "id": "muted-words", "text": "Muted words or hashtags I don't want to see" },
+        { "id": "followed-good", "text": "Followed a few accounts that inspire me" }
+      ]
+    },
+    {
+      "id": "peer-pressure",
+      "category": "habits",
+      "icon": "megaphone-outline",
+      "minutes": 2,
+      "title": "Peer pressure online",
+      "summary": "Challenges, group chats and pressure to post. How to say no.",
+      "sections": [
+        { "heading": "You can say no", "body": "Dangerous challenges, pile-ons in group chats, or pressure to share something private: you never have to join in." },
+        { "heading": "Easy ways out", "bullets": ["\"Nah, not for me.\"", "\"My phone's dying, gotta go.\"", "Leave or mute the group chat", "Blame Lumi: \"My app has a limit on, sorry!\""] },
+        { "heading": "Find your people", "body": "Real friends respect your no. If a group keeps pushing you, it's okay to spend less time with them." }
+      ]
+    },
+    {
+      "id": "sleep-basics",
+      "category": "wellbeing",
+      "icon": "moon-outline",
+      "minutes": 3,
+      "title": "Sleep basics",
+      "summary": "Simple habits that help most people sleep better. Not medical advice.",
+      "sections": [
+        { "heading": "Wind down", "body": "Screens, bright light and exciting content make your brain think it's daytime. Try putting screens away 30 to 60 minutes before bed." },
+        { "heading": "Habits that help", "bullets": ["Similar bedtime and wake time each day, even at weekends", "Phone charging outside the bedroom", "Daylight in the morning", "Less caffeine after lunch", "Write worries down before bed"] },
+        { "heading": "If sleep is hard for weeks", "body": "Talk to a trusted adult, a doctor or a health professional. Long-lasting sleep problems are common and can be helped." }
+      ]
+    },
+    {
+      "id": "stress-basics",
+      "category": "wellbeing",
+      "icon": "pulse-outline",
+      "minutes": 3,
+      "title": "Understanding stress",
+      "summary": "Stress is normal. Here's how to bring it down a notch.",
+      "sections": [
+        { "heading": "Your body's alarm", "body": "Stress is your body getting ready for a challenge: fast heartbeat, tight muscles, racing thoughts. A little helps you perform. Too much for too long wears you out." },
+        { "heading": "Three kinds of tools", "bullets": ["Body: slow breathing, movement, muscle relaxation", "Mind: break big tasks into tiny steps, write worries down", "People: talk to someone, ask for help with what's too much"] },
+        { "heading": "When to reach out", "body": "If stress or worry stops you sleeping, eating, going to school or seeing people for a while, please talk to someone. You deserve support." }
+      ]
+    },
+    {
+      "id": "procrastination",
+      "category": "wellbeing",
+      "icon": "timer-outline",
+      "minutes": 2,
+      "title": "Beating procrastination",
+      "summary": "It's about feelings, not laziness. Tricks that make starting easier.",
+      "sections": [
+        { "heading": "Why we put things off", "body": "We avoid tasks that feel boring, confusing or scary. Phones give instant relief, which makes avoiding even easier." },
+        { "heading": "What helps", "bullets": ["The 5-minute start: promise yourself just 5 minutes", "Make the first step tiny: \"open the document\"", "Phone in another room or Lumi focus mode on", "Work in short sprints with breaks", "Be kind to yourself. Guilt makes avoiding worse"] }
+      ]
+    }
+  ],
+  "consentQuiz": [
+    { "id": "photo-tag", "scenario": "A friend posts a group photo and tags you without asking. You hate how you look.", "answer": "ask", "explanation": "It's okay to ask them to untag you or take it down. Asking before posting others is the kind default." },
+    { "id": "password-proof", "scenario": "Your partner says that if you really trusted them, you'd share your password.", "answer": "notok", "explanation": "Trust doesn't need passwords. Pressure like this is a sign of control." },
+    { "id": "forward-screenshot", "scenario": "Someone sends you a screenshot of a private chat about a classmate and says \"pass it on\".", "answer": "notok", "explanation": "Sharing private messages without consent can hurt people. Don't pass it on." },
+    { "id": "location-share", "scenario": "Your close friend and you agree to share live location on the way home from a late event.", "answer": "ok", "explanation": "Agreed, temporary location sharing with someone you trust can keep you safe. You can stop any time." },
+    { "id": "pressure-pic", "scenario": "Someone you like keeps asking for a private photo after you said no.", "answer": "notok", "explanation": "No means no. Repeated pressure is never okay. You can block, report and tell someone." },
+    { "id": "ask-first", "scenario": "You want to post a funny video of your friend. You ask first and they say yes.", "answer": "ok", "explanation": "That's consent. And if they change their mind later, take it down." }
+  ],
+  "peerTopics": [
+    { "id": "lonely", "label": "Feeling lonely" },
+    { "id": "stress", "label": "Stress and school" },
+    { "id": "friends", "label": "Friendships" },
+    { "id": "habits", "label": "Phone and gaming habits" },
+    { "id": "low", "label": "Feeling low" },
+    { "id": "sleep", "label": "Sleep" },
+    { "id": "family", "label": "Family and home" },
+    { "id": "good-news", "label": "Something good happened" },
+    { "id": "other", "label": "Something else" }
+  ],
+  "aliasAdjectives": ["Calm", "Bright", "Gentle", "Brave", "Kind", "Quiet", "Sunny", "Steady", "Curious", "Cosy", "Hopeful", "Warm", "Mellow", "Clever", "Patient", "Cheerful"],
+  "aliasNouns": ["Otter", "River", "Fern", "Comet", "Maple", "Pebble", "Willow", "Sparrow", "Harbour", "Meadow", "Panda", "Lantern", "Breeze", "Koala", "Cedar", "Robin"],
+  "safety": {
+    "distressPhrases": [
+      "kill myself", "killing myself", "end my life", "ending my life", "take my own life", "take my life",
+      "want to die", "wanna die", "want to be dead", "wish i was dead", "wish i were dead", "better off dead",
+      "better off without me", "suicide", "suicidal", "self harm", "selfharm", "hurt myself", "hurting myself",
+      "cut myself", "cutting myself", "no reason to live", "nothing to live for", "not worth living",
+      "don't want to be here anymore", "dont want to be here anymore", "don't want to exist", "dont want to exist",
+      "end it all", "unalive", "nobody would miss me", "no one would miss me", "can't go on", "cant go on",
+      "give up on life", "disappear forever"
+    ],
+    "blockedWords": [
+      "kill yourself", "kys", "go die", "you should die", "you're worthless", "you are worthless", "youre worthless",
+      "you're ugly", "you are ugly", "youre ugly", "you're stupid", "you are stupid", "youre stupid",
+      "you're a loser", "you are a loser", "nobody likes you", "no one likes you", "everyone hates you",
+      "you deserve it", "shut up"
+    ]
+  },
+  "gameMoods": [
+    { "id": "energised", "label": "Energised", "score": 5 },
+    { "id": "happy", "label": "Happy", "score": 4 },
+    { "id": "fine", "label": "Fine", "score": 3 },
+    { "id": "tired", "label": "Tired", "score": 2 },
+    { "id": "frustrated", "label": "Frustrated", "score": 2 },
+    { "id": "want-more", "label": "Wanting more", "score": 2 }
+  ],
+  "afterScrollFeelings": [
+    { "id": "better", "label": "Better", "score": 4, "icon": "sunny-outline" },
+    { "id": "inspired", "label": "Inspired", "score": 4, "icon": "sparkles-outline" },
+    { "id": "same", "label": "About the same", "score": 3, "icon": "remove-circle-outline" },
+    { "id": "drained", "label": "Drained", "score": 2, "icon": "battery-dead-outline" },
+    { "id": "anxious", "label": "Anxious", "score": 2, "icon": "pulse-outline" },
+    { "id": "left-out", "label": "Left out", "score": 2, "icon": "person-remove-outline" },
+    { "id": "worse-about-me", "label": "Worse about myself", "score": 1, "icon": "cloudy-outline" }
+  ],
+  "badges": [
+    { "id": "first-step", "title": "First step", "description": "You set up Lumi your way.", "icon": "footsteps-outline" },
+    { "id": "first-checkin", "title": "Checked in", "description": "Your first mood check-in.", "icon": "happy-outline" },
+    { "id": "checkin-week", "title": "Self-aware", "description": "Checked in on 7 different days.", "icon": "calendar-outline" },
+    { "id": "first-breath", "title": "Deep breath", "description": "Tried a calming exercise.", "icon": "leaf-outline" },
+    { "id": "calm-five", "title": "Calm toolkit", "description": "Used calming tools 5 times.", "icon": "flower-outline" },
+    { "id": "grateful", "title": "Grateful", "description": "Wrote your first gratitude note.", "icon": "heart-outline" },
+    { "id": "ten-wins", "title": "Ten wins", "description": "Logged 10 wins, big or small.", "icon": "trophy-outline" },
+    { "id": "time-back", "title": "Time reclaimer", "description": "Your daily screen time dropped compared with last week.", "icon": "hourglass-outline" },
+    { "id": "rested", "title": "Well rested", "description": "5 nights of 7+ hours sleep in a week.", "icon": "moon-outline" },
+    { "id": "focus-five", "title": "In the zone", "description": "Finished 5 focus sessions.", "icon": "flash-outline" },
+    { "id": "game-balance", "title": "Balanced player", "description": "Stayed within your gaming budget for a week.", "icon": "game-controller-outline" },
+    { "id": "offline-hero", "title": "Offline hero", "description": "Completed an offline challenge.", "icon": "earth-outline" },
+    { "id": "detox-done", "title": "Detox done", "description": "Completed a digital detox challenge.", "icon": "cafe-outline" },
+    { "id": "comeback", "title": "Comeback", "description": "You started again after a slip. That takes real strength.", "icon": "refresh-outline" },
+    { "id": "seven-strong", "title": "Seven strong", "description": "Reached a 7-day streak.", "icon": "flame-outline" },
+    { "id": "connector", "title": "Connector", "description": "Did 3 real-world connection nudges.", "icon": "people-outline" },
+    { "id": "safety-savvy", "title": "Safety savvy", "description": "Read 3 safety guides.", "icon": "shield-checkmark-outline" },
+    { "id": "goal-getter", "title": "Goal getter", "description": "Completed a real-life goal.", "icon": "flag-outline" },
+    { "id": "reflector", "title": "Reflector", "description": "Wrote a weekly reflection.", "icon": "book-outline" },
+    { "id": "step-away", "title": "Stepped away", "description": "Chose to close an app from the pause screen 5 times.", "icon": "exit-outline" }
+  ],
+  "windowKinds": [
+    { "id": "study", "label": "Study time", "icon": "book-outline" },
+    { "id": "sleep", "label": "Sleep", "icon": "moon-outline" },
+    { "id": "meals", "label": "Meals", "icon": "restaurant-outline" },
+    { "id": "prayer", "label": "Prayer or reflection", "icon": "sparkles-outline" },
+    { "id": "personal", "label": "Personal time", "icon": "person-outline" },
+    { "id": "family", "label": "Family and friends", "icon": "people-outline" },
+    { "id": "custom", "label": "Something else", "icon": "time-outline" }
+  ],
+  "eventCategories": [
+    { "id": "social", "label": "Hang out", "icon": "people-outline" },
+    { "id": "sports", "label": "Sport and movement", "icon": "football-outline" },
+    { "id": "arts", "label": "Arts and music", "icon": "color-palette-outline" },
+    { "id": "volunteering", "label": "Volunteering", "icon": "hand-left-outline" },
+    { "id": "study", "label": "Study together", "icon": "school-outline" },
+    { "id": "support", "label": "Support and wellbeing", "icon": "heart-outline" },
+    { "id": "outdoors", "label": "Outdoors", "icon": "leaf-outline" }
+  ],
+  "goalCategories": [
+    { "id": "learning", "label": "Learning", "icon": "school-outline" },
+    { "id": "health", "label": "Health and movement", "icon": "fitness-outline" },
+    { "id": "creative", "label": "Creative", "icon": "color-palette-outline" },
+    { "id": "social", "label": "People and friendships", "icon": "people-outline" },
+    { "id": "school", "label": "School or work", "icon": "briefcase-outline" },
+    { "id": "other", "label": "Something else", "icon": "star-outline" }
+  ],
+  "reportReasons": [
+    { "id": "unkind", "label": "Unkind or bullying" },
+    { "id": "personal-info", "label": "Shares personal information" },
+    { "id": "unsafe", "label": "Unsafe or harmful" },
+    { "id": "spam", "label": "Spam or advertising" },
+    { "id": "other", "label": "Something else" }
+  ],
+  "noteTopics": [
+    { "id": "bullying", "label": "Bullying or harassment" },
+    { "id": "online-safety", "label": "Something online worried me" },
+    { "id": "feelings", "label": "How I've been feeling" },
+    { "id": "friends-family", "label": "Friends or family" },
+    { "id": "school", "label": "School or pressure" },
+    { "id": "other", "label": "Something else" }
+  ],
+  "demoHelperReply": "Thank you for trusting us with this. It sounds like a lot to carry, and you don't have to carry it alone. In the real app, a trained helper from your school or youth service answers here. If you ever feel unsafe, please use the Help button to reach someone right away. (This is a demo reply.)",
+  "demo": {
+    "nickname": "Sam",
+    "alias": "Calm Otter",
+    "apps": [
+      { "packageName": "demo.social.snapzy", "label": "Snapzy", "category": "social" },
+      { "packageName": "demo.video.streamo", "label": "Streamo", "category": "video" },
+      { "packageName": "demo.game.pixelquest", "label": "PixelQuest", "category": "game" },
+      { "packageName": "demo.chat.chatnest", "label": "ChatNest", "category": "social" },
+      { "packageName": "demo.web.browser", "label": "Browser", "category": "productivity" },
+      { "packageName": "demo.music.tunely", "label": "Tunely", "category": "audio" }
+    ],
+    "posts": [
+      { "topic": "lonely", "alias": "Quiet Sparrow", "hoursAgo": 5, "hear": 12, "strength": 7, "metoo": 9, "text": "Moved to a new school this term and lunch breaks feel really long. Anyone else find it hard to make friends at first?" },
+      { "topic": "habits", "alias": "Steady Cedar", "hoursAgo": 9, "hear": 4, "strength": 15, "metoo": 3, "text": "Day 4 of keeping my phone out of my bedroom. The first two nights were weird, but I fell asleep way faster last night." },
+      { "topic": "stress", "alias": "Curious Comet", "hoursAgo": 20, "hear": 6, "strength": 8, "metoo": 11, "text": "Exams in two weeks and I keep opening videos instead of revising. The 5-minute start trick actually helped today." },
+      { "topic": "friends", "alias": "Gentle Fern", "hoursAgo": 30, "hear": 14, "strength": 10, "metoo": 6, "text": "Got left out of a group chat and then saw them posting together. Trying to remember that one chat doesn't define me." },
+      { "topic": "good-news", "alias": "Sunny Otter", "hoursAgo": 44, "hear": 3, "strength": 9, "metoo": 2, "text": "Went for a walk with my cousin instead of gaming all evening. Didn't expect it to feel that good." },
+      { "topic": "low", "alias": "Mellow River", "hoursAgo": 52, "hear": 18, "strength": 13, "metoo": 8, "text": "Feeling flat this week and I'm not sure why. Writing it here because saying it out loud feels like too much." },
+      { "topic": "sleep", "alias": "Bright Robin", "hoursAgo": 70, "hear": 5, "strength": 2, "metoo": 16, "text": "Any tips for stopping late-night scrolling? I tell myself \"one more video\" for an hour." },
+      { "topic": "family", "alias": "Warm Lantern", "hoursAgo": 96, "hear": 9, "strength": 12, "metoo": 4, "text": "Home gets loud sometimes. Headphones and the breathing exercise are how I cope. Sharing in case it helps someone." }
+    ],
+    "replies": [
+      { "post": 0, "alias": "Brave Maple", "staff": false, "text": "It took me a whole term to find my people. Joining a club helped way more than I thought." },
+      { "post": 0, "alias": "Wellbeing team", "staff": true, "text": "Thanks for sharing this. Starting somewhere new is hard, and it's really common to feel this way at first. Have a look at the Events tab for clubs and groups. You're not alone." },
+      { "post": 6, "alias": "Clever Robin", "staff": false, "text": "I turn on grayscale after 10pm. Makes everything way less interesting!" },
+      { "post": 6, "alias": "Patient Koala", "staff": false, "text": "Charging it across the room helped me. If I want to scroll I have to get up." },
+      { "post": 5, "alias": "Kind Willow", "staff": false, "text": "Sending you strength. Flat weeks happen and it's brave to say it." },
+      { "post": 2, "alias": "Cheerful Panda", "staff": false, "text": "Same! I do 25 minutes on, then a short break. Way easier." }
+    ],
+    "note": {
+      "topic": "bullying",
+      "author": "Someone in my class keeps posting jokes about me in a group chat. I don't want to make it a big deal.",
+      "helper": "Thank you for telling us. That sounds really unfair, and it's not your fault. You don't have to handle it alone. It might help to save screenshots in Lumi's evidence log and think about who you'd feel safe telling. We're here if you want to talk it through. (Demo reply.)"
+    },
+    "events": [
+      { "title": "Study together session", "category": "study", "inDays": 1, "hour": 16, "minute": 30, "location": "Library quiet room", "description": "Bring your work, phones in the basket, snacks provided. Short breaks every 30 minutes." },
+      { "title": "Board game afternoon", "category": "social", "inDays": 2, "hour": 15, "minute": 0, "location": "Community library, room 2", "description": "Classic and new board games. Come alone or bring a friend. Beginners welcome." },
+      { "title": "Beginner running group", "category": "sports", "inDays": 3, "hour": 17, "minute": 30, "location": "Riverside park entrance", "description": "A relaxed 3 km run and walk. All speeds welcome, no one gets left behind." },
+      { "title": "Art and chill drop-in", "category": "arts", "inDays": 5, "hour": 16, "minute": 0, "location": "Youth centre", "description": "Drawing, painting and collage with music. All materials provided." },
+      { "title": "Park clean-up volunteers", "category": "volunteering", "inDays": 6, "hour": 10, "minute": 0, "location": "Main park gate", "description": "Help make the park nicer. Gloves and bags provided. Counts as volunteering hours." },
+      { "title": "Exam stress workshop", "category": "support", "inDays": 8, "hour": 18, "minute": 0, "location": "Online (link from the organiser)", "description": "Practical tips for revision, sleep and stress. Run by the wellbeing team." }
+    ],
+    "gratitude": ["My friend saved me a seat at lunch.", "Warm food after a cold walk home.", "My little brother made me laugh so hard.", "Finally finished that book.", "A sunny break between classes.", "Mum made my favourite dinner."],
+    "wins": ["Kept my phone outside my room all night.", "Asked a question in class even though I was nervous.", "Did 25 minutes of revision without checking my phone.", "Said no to staying up gaming.", "Went to the running group for the first time."],
+    "reflections": ["Busy week. I noticed I feel worse after scrolling late at night, but better after the walk with my cousin."],
+    "goals": [
+      { "title": "Learn three songs on guitar", "why": "I want something creative that's just mine.", "category": "creative", "steps": ["Learn 4 basic chords", "Practise 15 minutes, 4 times a week", "Play one song for a friend"], "done": 1 },
+      { "title": "Run 5 km without stopping", "why": "To feel stronger and clear my head.", "category": "health", "steps": ["Join the beginner running group", "Run 2 km", "Run 3.5 km", "Run 5 km"], "done": 2 }
+    ],
+    "evidence": { "where": "Group chat (example)", "what": "Example entry: screenshots of repeated mean jokes about me, posted by the same account three days in a row.", "who": "Username of the account" }
+  }
+}

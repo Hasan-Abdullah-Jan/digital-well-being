@@ -1,0 +1,6 @@
+<resources>
+    <color name="lumi_pause_bg">#0F141A</color>
+    <color name="lumi_widget_bg">#1C3634</color>
+    <color name="lumi_widget_text">#ECEFF3</color>
+    <color name="lumi_widget_subtle">#BFE6E0</color>
+</resources>

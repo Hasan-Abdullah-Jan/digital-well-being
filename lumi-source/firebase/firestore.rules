@@ -1,0 +1,267 @@
+rules_version = '2';
+
+// =============================================================================
+// Lumi — Firestore security rules
+//
+// Principles (see docs/PRIVACY_AND_SAFETY.md):
+//  * Personal wellbeing data (moods, journal, sleep, screen time) is NEVER stored
+//    in Firestore. It stays on the phone. There is deliberately no /users data.
+//  * Everyone signs in anonymously and can only create, read and delete their own
+//    posts, replies, reactions, reports and anonymous notes.
+//  * Staff roles live in /staff/{uid}, are set by the project owner in the Firebase
+//    console, and only allow moderating anonymous posts, answering anonymous notes
+//    and posting events. No rule lets anyone browse another person's data.
+//  * Everything not explicitly allowed is denied.
+// =============================================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function uid() {
+      return request.auth.uid;
+    }
+
+    function staffPath() {
+      return /databases/$(database)/documents/staff/$(request.auth.uid);
+    }
+
+    function hasRole(role) {
+      return signedIn() && exists(staffPath()) && get(staffPath()).data.roles[role] == true;
+    }
+
+    function isModerator() {
+      return hasRole('moderator');
+    }
+
+    function isHelper() {
+      return hasRole('helper');
+    }
+
+    function isOrganiser() {
+      return hasRole('organiser');
+    }
+
+    function validText(value, minLength, maxLength) {
+      return value is string && value.size() >= minLength && value.size() <= maxLength;
+    }
+
+    function onlyChanged(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+
+    // Keep these lists in sync with src/i18n/locales/en/content.json (ids only).
+    function peerTopics() {
+      return ['lonely', 'stress', 'friends', 'habits', 'low', 'sleep', 'family', 'good-news', 'other'];
+    }
+
+    function noteTopics() {
+      return ['bullying', 'online-safety', 'feelings', 'friends-family', 'school', 'other'];
+    }
+
+    function eventCategories() {
+      return ['social', 'sports', 'arts', 'volunteering', 'study', 'support', 'outdoors'];
+    }
+
+    function reportReasons() {
+      return ['unkind', 'personal-info', 'unsafe', 'spam', 'other'];
+    }
+
+    // ---------- staff roles (managed only in the Firebase console) ----------
+    match /staff/{userId} {
+      allow read: if signedIn() && uid() == userId;
+      allow write: if false;
+    }
+
+    // ---------- peer-support posts ----------
+    match /peerPosts/{postId} {
+      function postPath() {
+        return /databases/$(database)/documents/peerPosts/$(postId);
+      }
+
+      function myReactionPath() {
+        return /databases/$(database)/documents/peerPosts/$(postId)/reactions/$(request.auth.uid);
+      }
+
+      function myReportPath() {
+        return /databases/$(database)/documents/peerPosts/$(postId)/reports/$(request.auth.uid);
+      }
+
+      // +1 on exactly one reaction counter, in the same batch as creating your reaction.
+      function isReactionIncrement() {
+        let type = getAfter(myReactionPath()).data.type;
+        return resource.data.status == 'published'
+          && onlyChanged(['reactions'])
+          && !exists(myReactionPath())
+          && existsAfter(myReactionPath())
+          && request.resource.data.reactions.diff(resource.data.reactions).affectedKeys().hasOnly([type])
+          && request.resource.data.reactions[type] == resource.data.reactions[type] + 1;
+      }
+
+      // +1 on reportCount, in the same batch as creating your report.
+      function isReportIncrement() {
+        return onlyChanged(['reportCount'])
+          && !exists(myReportPath())
+          && existsAfter(myReportPath())
+          && request.resource.data.reportCount == resource.data.reportCount + 1;
+      }
+
+      allow read: if signedIn()
+        && (resource.data.status == 'published' || resource.data.authorId == uid() || isModerator());
+
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['authorId', 'alias', 'topic', 'text', 'status', 'createdAt', 'reactions', 'reportCount', 'replyCount'])
+        && request.resource.data.authorId == uid()
+        && validText(request.resource.data.alias, 1, 40)
+        && request.resource.data.topic in peerTopics()
+        && validText(request.resource.data.text, 1, 500)
+        && request.resource.data.status == 'pending'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.reactions == { 'hear': 0, 'strength': 0, 'metoo': 0 }
+        && request.resource.data.reportCount == 0
+        && request.resource.data.replyCount == 0;
+
+      allow update: if (isModerator()
+          && onlyChanged(['status', 'moderatedAt', 'replyCount'])
+          && request.resource.data.status in ['pending', 'published', 'hidden'])
+        || (signedIn() && isReactionIncrement())
+        || (signedIn() && isReportIncrement());
+
+      allow delete: if signedIn() && (resource.data.authorId == uid() || isModerator());
+
+      match /reactions/{userId} {
+        allow read: if signedIn() && uid() == userId;
+        allow create: if signedIn()
+          && uid() == userId
+          && request.resource.data.keys().hasOnly(['type', 'createdAt'])
+          && request.resource.data.type in ['hear', 'strength', 'metoo']
+          && request.resource.data.createdAt == request.time
+          && get(postPath()).data.status == 'published'
+          && getAfter(postPath()).data.reactions[request.resource.data.type]
+            == get(postPath()).data.reactions[request.resource.data.type] + 1;
+        allow update: if false;
+        allow delete: if signedIn() && uid() == userId;
+      }
+
+      match /reports/{userId} {
+        allow read: if isModerator();
+        allow create: if signedIn()
+          && uid() == userId
+          && request.resource.data.keys().hasOnly(['reason', 'createdAt'])
+          && request.resource.data.reason in reportReasons()
+          && request.resource.data.createdAt == request.time
+          && getAfter(postPath()).data.reportCount == get(postPath()).data.reportCount + 1;
+        allow update: if false;
+        allow delete: if signedIn() && (uid() == userId || isModerator());
+      }
+    }
+
+    // ---------- replies to posts ----------
+    match /peerReplies/{replyId} {
+      function parentPost() {
+        return get(/databases/$(database)/documents/peerPosts/$(request.resource.data.postId));
+      }
+
+      allow read: if signedIn()
+        && (resource.data.status == 'published' || resource.data.authorId == uid() || isModerator());
+
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['postId', 'authorId', 'alias', 'text', 'status', 'fromStaff', 'createdAt'])
+        && request.resource.data.postId is string
+        && request.resource.data.authorId == uid()
+        && validText(request.resource.data.alias, 1, 40)
+        && validText(request.resource.data.text, 1, 300)
+        && request.resource.data.createdAt == request.time
+        && parentPost().data.status == 'published'
+        && (request.resource.data.fromStaff == false || isModerator() || isHelper())
+        && (request.resource.data.status == 'pending' || (request.resource.data.status == 'published' && isModerator()));
+
+      allow update: if isModerator()
+        && onlyChanged(['status', 'moderatedAt'])
+        && request.resource.data.status in ['pending', 'published', 'hidden'];
+
+      allow delete: if signedIn() && (resource.data.authorId == uid() || isModerator());
+    }
+
+    // ---------- anonymous notes to a trusted helper ----------
+    match /anonNotes/{noteId} {
+      function lastMessageOk() {
+        return request.resource.data.lastMessageAt == resource.data.lastMessageAt
+          || request.resource.data.lastMessageAt == request.time;
+      }
+
+      allow read: if signedIn() && (resource.data.authorId == uid() || isHelper());
+
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['authorId', 'topic', 'status', 'createdAt', 'lastMessageAt'])
+        && request.resource.data.authorId == uid()
+        && request.resource.data.topic in noteTopics()
+        && request.resource.data.status == 'open'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.lastMessageAt == request.time;
+
+      allow update: if (signedIn()
+          && resource.data.authorId == uid()
+          && onlyChanged(['status', 'lastMessageAt'])
+          && request.resource.data.status in ['open', 'closed']
+          && lastMessageOk())
+        || (isHelper()
+          && onlyChanged(['status', 'lastMessageAt'])
+          && request.resource.data.status in ['answered', 'closed']
+          && lastMessageOk());
+
+      allow delete: if signedIn() && resource.data.authorId == uid();
+
+      match /messages/{messageId} {
+        function note() {
+          return get(/databases/$(database)/documents/anonNotes/$(noteId));
+        }
+
+        function noteAfter() {
+          return getAfter(/databases/$(database)/documents/anonNotes/$(noteId));
+        }
+
+        allow read: if signedIn() && (note().data.authorId == uid() || isHelper());
+
+        allow create: if signedIn()
+          && request.resource.data.keys().hasOnly(['from', 'text', 'createdAt'])
+          && validText(request.resource.data.text, 1, 1000)
+          && request.resource.data.createdAt == request.time
+          && ((request.resource.data.from == 'author' && noteAfter().data.authorId == uid())
+            || (request.resource.data.from == 'helper' && isHelper()));
+
+        allow update: if false;
+
+        // The author can delete the whole conversation (including helper replies) when deleting their data.
+        allow delete: if signedIn() && note().data.authorId == uid();
+      }
+    }
+
+    // ---------- community events board (public, read-only for everyone) ----------
+    match /events/{eventId} {
+      allow read: if true;
+
+      allow create: if (isOrganiser() || isModerator())
+        && request.resource.data.keys().hasOnly(['title', 'description', 'category', 'startsAt', 'location', 'link', 'createdAt', 'createdBy'])
+        && validText(request.resource.data.title, 1, 80)
+        && validText(request.resource.data.description, 0, 500)
+        && validText(request.resource.data.location, 1, 120)
+        && validText(request.resource.data.link, 0, 300)
+        && request.resource.data.category in eventCategories()
+        && request.resource.data.startsAt is timestamp
+        && request.resource.data.createdBy == uid()
+        && request.resource.data.createdAt == request.time;
+
+      allow update: if false;
+      allow delete: if isOrganiser() || isModerator();
+    }
+
+    // ---------- everything else is denied ----------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

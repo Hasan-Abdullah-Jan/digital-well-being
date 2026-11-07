@@ -1,0 +1,7 @@
+<resources>
+    <style name="LumiPauseTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/lumi_pause_bg</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+</resources>

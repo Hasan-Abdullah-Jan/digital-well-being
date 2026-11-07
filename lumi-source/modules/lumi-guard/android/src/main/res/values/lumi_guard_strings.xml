@@ -1,0 +1,5 @@
+<resources>
+    <string name="lumi_widget_label">Lumi quote</string>
+    <string name="lumi_widget_description">A daily thought matched to your goals</string>
+    <string name="lumi_widget_placeholder">Small steps still move you forward.</string>
+</resources>

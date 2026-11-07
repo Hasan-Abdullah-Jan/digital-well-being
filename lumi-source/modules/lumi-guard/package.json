@@ -1,0 +1,7 @@
+{
+  "name": "lumi-guard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lumi's Android-only native module: screen-time data (UsageStatsManager), pause screens, quote widget and grayscale.",
+  "main": "index.ts"
+}

@@ -1,0 +1,27 @@
+# EAS Build uploads files using this list instead of .gitignore.
+# It is the same as .gitignore EXCEPT that config/.env IS uploaded,
+# so your keys reach the cloud build without being committed to git.
+node_modules/
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+/ios
+/android
+.kotlin/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+.metro-health-check*
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+.firebase/
+coverage/
+test-results/
+playwright-report/
+.DS_Store
+*.tsbuildinfo
