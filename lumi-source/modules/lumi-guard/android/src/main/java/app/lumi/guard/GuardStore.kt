@@ -14,6 +14,12 @@ data class WindowRule(val label: String, val days: Set<Int>, val start: Int, val
 
 data class BedtimeRule(val enabled: Boolean, val start: Int, val end: Int, val grayscale: Boolean)
 
+/** Strict mode: no "Open anyway" for real blocks, plus an optional cap on one continuous session. */
+data class StrictRule(val enabled: Boolean, val sessionCap: Int, val cooldown: Int)
+
+/** Smart 20-20-20 reminder after [every] minutes of continuous screen-on time, between [from] and [to]. */
+data class EyeRule(val enabled: Boolean, val every: Int, val from: Int, val to: Int)
+
 /** Everything the JavaScript app sends to the native guard (see src/services/guardSync.ts). */
 data class GuardConfig(
   val limits: List<LimitRule>,
@@ -24,8 +30,27 @@ data class GuardConfig(
   val focusUntil: Long,
   val strings: Map<String, String>,
   val suggestions: List<String>,
+  val focusMode: String = "gentle",
+  val focusAllow: Set<String> = emptySet(),
+  val focusStrict: Boolean = false,
+  val strict: StrictRule = StrictRule(false, 0, 30),
+  val eye: EyeRule = EyeRule(false, 20, 0, 0),
 ) {
   fun limitFor(pkg: String): LimitRule? = limits.firstOrNull { it.pkg == pkg }
+
+  fun focusActive(now: Long = System.currentTimeMillis()): Boolean = focusUntil > now
+
+  fun deepFocusActive(now: Long = System.currentTimeMillis()): Boolean = focusActive(now) && focusMode == "deep"
+
+  /** True when the eye-rest reminder may be sent right now (inside the chosen hours). */
+  fun eyeHoursActive(now: Long = System.currentTimeMillis()): Boolean {
+    if (!eye.enabled || eye.every <= 0) return false
+    if (eye.from == eye.to) return true
+    val c = Calendar.getInstance().apply { timeInMillis = now }
+    val minutes = c.get(Calendar.HOUR_OF_DAY) * 60 + c.get(Calendar.MINUTE)
+    return if (eye.from < eye.to) minutes >= eye.from && minutes < eye.to
+    else minutes >= eye.from || minutes < eye.to
+  }
 
   fun string(key: String, fallback: String): String = strings[key]?.takeIf { it.isNotBlank() } ?: fallback
 
@@ -66,6 +91,8 @@ data class GuardConfig(
           WindowRule(it.optString("label"), it.optJSONArray("days").ints().toSet(), it.optInt("start"), it.optInt("end"))
         }
         val bed = o.optJSONObject("bedtime")
+        val strictObj = o.optJSONObject("strict")
+        val eyeObj = o.optJSONObject("eye")
         val stringsObj = o.optJSONObject("strings")
         val strings = HashMap<String, String>()
         stringsObj?.keys()?.forEach { key -> strings[key] = stringsObj.optString(key) }
@@ -83,6 +110,20 @@ data class GuardConfig(
           focusUntil = o.optLong("focusUntil", 0L),
           strings = strings,
           suggestions = o.optJSONArray("suggestions").strings(),
+          focusMode = o.optString("focusMode", "gentle"),
+          focusAllow = o.optJSONArray("focusAllow").strings().toSet(),
+          focusStrict = o.optBoolean("focusStrict", false),
+          strict = StrictRule(
+            strictObj?.optBoolean("enabled", false) ?: false,
+            (strictObj?.optInt("sessionCap", 0) ?: 0).coerceAtLeast(0),
+            (strictObj?.optInt("cooldown", 30) ?: 30).coerceAtLeast(1),
+          ),
+          eye = EyeRule(
+            eyeObj?.optBoolean("enabled", false) ?: false,
+            (eyeObj?.optInt("every", 20) ?: 20).coerceAtLeast(5),
+            eyeObj?.optInt("from", 0) ?: 0,
+            eyeObj?.optInt("to", 0) ?: 0,
+          ),
         )
       } catch (error: Exception) {
         EMPTY
@@ -126,6 +167,13 @@ class GuardStore private constructor(context: Context) {
 
   fun hasAllowance(pkg: String, now: Long = System.currentTimeMillis()): Boolean =
     prefs.getLong(KEY_ALLOW_PREFIX + pkg, 0L) > now
+
+  /** After hitting the session cap in strict mode, the app stays locked until this time. */
+  fun setCooldown(pkg: String, until: Long) {
+    prefs.edit().putLong(KEY_COOLDOWN_PREFIX + pkg, until).apply()
+  }
+
+  fun cooldownUntil(pkg: String): Long = prefs.getLong(KEY_COOLDOWN_PREFIX + pkg, 0L)
 
   fun addEvent(pkg: String, label: String, reason: String, choice: String) {
     synchronized(lock) {
@@ -184,6 +232,7 @@ class GuardStore private constructor(context: Context) {
     private const val KEY_ENABLED = "enabled"
     private const val KEY_EVENTS = "events"
     private const val KEY_ALLOW_PREFIX = "allow_"
+    private const val KEY_COOLDOWN_PREFIX = "cooldown_"
     private const val KEY_GRAYSCALE_BY_LUMI = "grayscale_by_lumi"
     private const val KEY_WIDGET_QUOTES = "widget_quotes"
     private val lock = Any()

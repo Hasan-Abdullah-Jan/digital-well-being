@@ -11,6 +11,14 @@
 | Phone-free times (study/sleep/meals/prayer/personal) | Procrastination, sleep loss, family friction | Constant availability, no boundaries | |
 | Bedtime mode (wind-down, pause apps, grayscale, sleep log) | Sleep loss | Late-night screens, blue light, arousal | |
 | Focus timer + grayscale + 5-minute start | Low focus, procrastination | Task avoidance, attractive app design | |
+| Strict mode (no "open anyway" once a limit applies) | Doomscrolling despite limits | Easy override undermines self-control in the moment | |
+| Scrolling session cap with cool-down | Endless scrolling within the daily allowance | Infinite feeds have no stopping cue; one session runs on | |
+| Commitment lock (tighten-only rules, delayed emergency unlock) | Undoing limits on impulse | Present bias: the "now" self overrides earlier plans | |
+| Deep focus (allow-list) and locked focus sessions | Low focus, procrastination | Any app can become the distraction, not only listed ones | |
+| 20-20-20 eye breaks (smart, screen-time based on Android) | Eye strain, headaches | Long uninterrupted close-up screen focus, reduced blinking | |
+| Body tracker: water, movement, stretches, time outside | Sedentary habits, poor posture | Hours of sitting with a phone; physical needs go unnoticed | |
+| Guided stretch break (neck, shoulders, wrists, thumbs) | "Tech neck", sore thumbs/wrists | Forward head posture and repetitive phone grip | |
+| Crew challenges with family/friends (offline, code sharing) | Loneliness, escapism, family conflict over phones | Offline activities lack the social reward and structure games have | |
 | Replacement-activity ideas | Boredom scrolling | Lack of ready alternatives | |
 | Personalised quotes + home-screen widget | Low motivation | Lack of salient goal reminders | |
 | Badges, usage-drop celebrations | Low motivation | Few positive reinforcements for change | |

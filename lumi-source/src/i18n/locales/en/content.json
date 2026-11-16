@@ -601,7 +601,12 @@
     { "id": "safety-savvy", "title": "Safety savvy", "description": "Read 3 safety guides.", "icon": "shield-checkmark-outline" },
     { "id": "goal-getter", "title": "Goal getter", "description": "Completed a real-life goal.", "icon": "flag-outline" },
     { "id": "reflector", "title": "Reflector", "description": "Wrote a weekly reflection.", "icon": "book-outline" },
-    { "id": "step-away", "title": "Stepped away", "description": "Chose to close an app from the pause screen 5 times.", "icon": "exit-outline" }
+    { "id": "step-away", "title": "Stepped away", "description": "Chose to close an app from the pause screen 5 times.", "icon": "exit-outline" },
+    { "id": "locked-in", "title": "Locked in", "description": "Finished a deep or locked focus session.", "icon": "moon-outline" },
+    { "id": "eye-care", "title": "Eye care", "description": "Took 10 eye breaks.", "icon": "eye-outline" },
+    { "id": "body-balance", "title": "In balance", "description": "Hit all your body goals in one day.", "icon": "body-outline" },
+    { "id": "crew-up", "title": "Crew up", "description": "Started or joined a challenge with family or friends.", "icon": "people-circle-outline" },
+    { "id": "crew-finish", "title": "Better together", "description": "Finished a crew challenge.", "icon": "podium-outline" }
   ],
   "windowKinds": [
     { "id": "study", "label": "Study time", "icon": "book-outline" },
@@ -646,6 +651,8 @@
   ],
   "demoHelperReply": "Thank you for trusting us with this. It sounds like a lot to carry, and you don't have to carry it alone. In the real app, a trained helper from your school or youth service answers here. If you ever feel unsafe, please use the Help button to reach someone right away. (This is a demo reply.)",
   "demo": {
+    "crewName": "The Okafor-Lee Family",
+    "crew": ["Sam", "Mum", "Dad", "Maya"],
     "nickname": "Sam",
     "alias": "Calm Otter",
     "apps": [
@@ -695,5 +702,57 @@
       { "title": "Run 5 km without stopping", "why": "To feel stronger and clear my head.", "category": "health", "steps": ["Join the beginner running group", "Run 2 km", "Run 3.5 km", "Run 5 km"], "done": 2 }
     ],
     "evidence": { "where": "Group chat (example)", "what": "Example entry: screenshots of repeated mean jokes about me, posted by the same account three days in a row.", "who": "Username of the account" }
-  }
+  },
+  "eyeExercises": [
+    { "id": "far", "icon": "telescope-outline", "seconds": 20, "title": "Look far away", "body": "Find something at least 6 metres (20 feet) away, like a window, a tree or the far wall. Let your eyes rest on it." },
+    { "id": "blink", "icon": "eye-outline", "seconds": 10, "title": "Slow blinks", "body": "Close your eyes gently, then open them. Do this slowly, ten times. It spreads tears and stops dryness." },
+    { "id": "near-far", "icon": "swap-horizontal-outline", "seconds": 20, "title": "Near and far", "body": "Hold your thumb at arm's length. Look at it, then at something far away. Switch back and forth." },
+    { "id": "roll", "icon": "sync-outline", "seconds": 15, "title": "Eye circles", "body": "Without moving your head, look up, right, down and left in a slow circle. Then go the other way." },
+    { "id": "palm", "icon": "hand-left-outline", "seconds": 20, "title": "Palming", "body": "Rub your hands together until they're warm. Cup them over your closed eyes and enjoy the darkness." }
+  ],
+  "stretches": [
+    { "id": "neck", "icon": "body-outline", "seconds": 30, "title": "Neck release", "body": "Drop your right ear towards your right shoulder and breathe. Swap sides halfway. No forcing." },
+    { "id": "shoulders", "icon": "repeat-outline", "seconds": 30, "title": "Shoulder rolls", "body": "Roll your shoulders up, back and down, slowly. Phones pull them forward; this undoes it." },
+    { "id": "chest", "icon": "expand-outline", "seconds": 30, "title": "Chest opener", "body": "Clasp your hands behind your back, lift your chest and look slightly up. Breathe deeply." },
+    { "id": "wrists", "icon": "hand-right-outline", "seconds": 30, "title": "Thumbs and wrists", "body": "Stretch each arm out, palm up, and gently pull the fingers back with the other hand. Then make loose fists and circle your wrists." },
+    { "id": "twist", "icon": "git-compare-outline", "seconds": 30, "title": "Seated twist", "body": "Sit tall, put your right hand on your left knee and twist gently to the left. Swap sides halfway." },
+    { "id": "reach", "icon": "arrow-up-outline", "seconds": 30, "title": "Stand and reach", "body": "Stand up, reach both arms to the ceiling and stretch tall. Then walk around for a moment." }
+  ],
+  "eyeTips": [
+    "20-20-20: every 20 minutes, look 20 feet (6 m) away for 20 seconds.",
+    "Hold your phone at least a forearm's length from your face.",
+    "Match screen brightness to the room. Too bright or too dark both strain your eyes.",
+    "Use night light or dark mode in the evening.",
+    "Blink on purpose. We blink about half as often when looking at screens.",
+    "Time outdoors in daylight is good for your eyes, especially for young people."
+  ],
+  "crewHabits": [
+    { "id": "phone-free-dinner", "title": "Phone-free dinner", "icon": "restaurant-outline", "points": 10 },
+    { "id": "walk", "title": "20-minute walk", "icon": "walk-outline", "points": 10 },
+    { "id": "read", "title": "Read for 15 minutes", "icon": "book-outline", "points": 8 },
+    { "id": "outside", "title": "30 minutes outside", "icon": "sunny-outline", "points": 10 },
+    { "id": "no-phone-bed", "title": "No phone in bed", "icon": "bed-outline", "points": 10 },
+    { "id": "water", "title": "Drink 6 glasses of water", "icon": "water-outline", "points": 5 },
+    { "id": "board-game", "title": "Play a game together", "icon": "dice-outline", "points": 12 },
+    { "id": "chores", "title": "Help at home", "icon": "home-outline", "points": 8 },
+    { "id": "call", "title": "Call someone you love", "icon": "call-outline", "points": 8 },
+    { "id": "exercise", "title": "Sport or exercise", "icon": "football-outline", "points": 12 },
+    { "id": "create", "title": "Make something (draw, cook, build)", "icon": "color-palette-outline", "points": 10 },
+    { "id": "screen-free-hour", "title": "Screen-free hour before bed", "icon": "moon-outline", "points": 10 }
+  ],
+  "crewRewards": [
+    "Winner picks the weekend movie",
+    "Winner chooses dinner",
+    "Everyone goes out for ice cream",
+    "Family picnic or day out",
+    "Last place does the dishes for a night",
+    "Game night, winner picks the game"
+  ],
+  "crewNames": [
+    "The Offline Crew",
+    "Team Sunshine",
+    "Phone-Free Family",
+    "The Real-World Club",
+    "Screen Breakers"
+  ]
 }

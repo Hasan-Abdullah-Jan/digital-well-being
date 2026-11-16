@@ -124,6 +124,14 @@ try {
     ['/settings/privacy', 'screen-privacy'],
     ['/settings/permissions', 'screen-permissions'],
     ['/settings/about', 'screen-about'],
+    ['/habits/strict', 'screen-strict'],
+    ['/body', 'screen-body'],
+    ['/body/eye-break', 'screen-eye-break'],
+    ['/body/stretch', 'screen-stretch'],
+    ['/crew', 'screen-crew'],
+    ['/crew/demo-crew', 'screen-crew-board'],
+    ['/crew/new', 'screen-crew-new'],
+    ['/crew/join', 'screen-crew-join'],
   ];
   let i = 10;
   for (const [route, id] of routes) {
@@ -145,6 +153,39 @@ try {
   await visible(page, 'support-sheet', 10000);
   await shot(page, '80-support-sheet');
 
+  console.log('New features');
+  await page.goto(base + '/body');
+  await visible(page, 'screen-body');
+  await tap(page, 'add-water-1');
+  await page.goto(base + '/body/eye-break');
+  await visible(page, 'screen-eye-break');
+  await tap(page, 'eye-quick');
+  await page.waitForTimeout(1500);
+  await shot(page, '81-eye-break-running');
+  await page.goto(base + '/habits/focus');
+  await visible(page, 'screen-focus');
+  await page.getByRole('radio', { name: 'Deep focus' }).last().click();
+  await tap(page, 'toggle-focus-lock');
+  await shot(page, '82-focus-deep-setup');
+  await tap(page, 'focus-start');
+  await visible(page, 'focus-emergency');
+  await shot(page, '83-focus-locked-running');
+  await page.goto(base + '/crew/demo-crew');
+  await visible(page, 'screen-crew-board');
+  await tap(page, 'crew-habit-walk');
+  await shot(page, '84-crew-checkin');
+  await page.goto(base + '/crew/new');
+  await visible(page, 'screen-crew-new');
+  await page.locator('[data-testid="crew-member-name"]:visible').fill('Leo');
+  await tap(page, 'crew-add-member');
+  await tap(page, 'crew-create');
+  await visible(page, 'screen-crew-board');
+  await shot(page, '85-crew-created');
+  await page.goto(base + '/habits/strict');
+  await visible(page, 'screen-strict');
+  await tap(page, 'toggle-strict');
+  await shot(page, '86-strict-on');
+
   console.log('Dark mode');
   const dark = await newPage('dark');
   await dark.goto(base);
@@ -155,6 +196,15 @@ try {
   await dark.goto(base + '/me/insights');
   await visible(dark, 'screen-insights');
   await shot(dark, '91-insights-dark');
+  await dark.goto(base + '/body');
+  await visible(dark, 'screen-body');
+  await shot(dark, '92-body-dark');
+  await dark.goto(base + '/crew/demo-crew');
+  await visible(dark, 'screen-crew-board');
+  await shot(dark, '93-crew-dark');
+  await dark.goto(base + '/habits/strict');
+  await visible(dark, 'screen-strict');
+  await shot(dark, '94-strict-dark');
 
   console.log('Fresh onboarding (no demo)');
   const fresh = await newPage();

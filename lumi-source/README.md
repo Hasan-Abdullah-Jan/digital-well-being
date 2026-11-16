@@ -52,8 +52,10 @@ npm run test:web     # web build + click-through smoke test (needs Playwright)
 Cloud flow end-to-end against emulators: see `scripts/e2e-cloud-web.mjs`.
 
 ## Honest limitations
-- Real screen time, pause screens and the widget are **Android-only** (full APK, not Expo Go). iOS and web use self-reported check-ins, focus timers and reminders; Apple's Screen Time API needs a special entitlement.
+- Real screen time, pause screens, strict mode, deep focus blocking and smart eye breaks are **Android-only** (full APK, not Expo Go). iOS and web use self-reported check-ins, focus timers and reminders; Apple's Screen Time API needs a special entitlement.
 - System-wide grayscale needs a one-time `adb` command; otherwise the app shows how to switch it on.
 - Distress detection is keyword-based: it can miss things or over-trigger, so it only ever offers help kindly.
 - Moderation is human; posts wait for a moderator. Someone must run the team tools.
+- Crew challenges sync by sharing a code (no server), so phones only match after codes are swapped. Points are on an honour system.
+- Step counting is not automatic; movement is logged by tapping (or by finishing a stretch break).
 - Lumi is not a therapist or an emergency service.

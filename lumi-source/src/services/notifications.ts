@@ -6,14 +6,16 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { getContent, t } from '@/i18n';
+import { usesNativeEyeRest } from '@/services/guardSync';
+import { useBody } from '@/store/body';
 import { useHabits } from '@/store/habits';
 import { useSettings } from '@/store/settings';
 import { pickDaily } from '@/utils/misc';
-import { dateKey, hhmmToMinutes } from '@/utils/time';
+import { dateKey, hhmmToMinutes, minutesToHHMM } from '@/utils/time';
 
 const REMINDERS = 'lumi-reminders';
 const TIMERS = 'lumi-timers';
-const MANAGED_PREFIXES = ['reminder-', 'window-'];
+const MANAGED_PREFIXES = ['reminder-', 'window-', 'body-'];
 
 const supported = Platform.OS === 'android' || Platform.OS === 'ios';
 
@@ -133,6 +135,7 @@ export async function syncReminders(): Promise<void> {
     await schedule('reminder-nudge-a', t('notifications.nudgeTitle'), t('notifications.nudgeBody'), weekly(2, '17:30'), '/connect/nudges');
     await schedule('reminder-nudge-b', t('notifications.nudgeTitle'), t('notifications.nudgeBody2'), weekly(5, '16:30'), '/connect/nudges');
   }
+  await scheduleBodyReminders();
   if (n.windows) {
     for (const w of habits.windows.filter((x) => x.enabled)) {
       for (const day of w.days) {
@@ -146,6 +149,43 @@ export async function syncReminders(): Promise<void> {
       }
     }
   }
+}
+
+/** Times (minutes of day) from `from` to `to`, every `every` minutes, excluding the start itself. */
+export function reminderSlots(from: string, to: string, every: number, max: number): number[] {
+  const start = hhmmToMinutes(from);
+  let end = hhmmToMinutes(to);
+  if (end <= start) end += 1440;
+  const slots: number[] = [];
+  for (let m = start + every; m <= end && slots.length < max; m += every) slots.push(m % 1440);
+  return slots;
+}
+
+async function scheduleBodyReminders(): Promise<void> {
+  const { reminders } = useBody.getState();
+  // iOS keeps at most 64 scheduled notifications per app, so stay well under it there.
+  const ios = Platform.OS === 'ios';
+  const jobs: Promise<void>[] = [];
+  const add = (kind: 'eye' | 'move' | 'water', max: number, url: string) => {
+    const r = reminders[kind];
+    if (!r.enabled) return;
+    reminderSlots(reminders.from, reminders.to, r.every, max).forEach((minute, i) => {
+      jobs.push(
+        schedule(
+          `body-${kind}-${i}`,
+          t(`notifications.body.${kind}Title`),
+          t(`notifications.body.${kind}Body`, { count: r.every }),
+          daily(minutesToHHMM(minute)),
+          url,
+        ),
+      );
+    });
+  };
+  // On Android with usage access, eye breaks follow real screen time in the guard service instead.
+  if (!usesNativeEyeRest()) add('eye', ios ? 16 : 40, '/body/eye-break');
+  add('move', ios ? 8 : 16, '/body/stretch');
+  add('water', ios ? 8 : 12, '/body');
+  await Promise.all(jobs);
 }
 
 /** One-off timer notification (focus end, gaming last round...). */

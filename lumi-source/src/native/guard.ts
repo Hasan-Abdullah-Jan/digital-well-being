@@ -28,6 +28,13 @@ export type GuardConfig = {
   windows: { label: string; days: number[]; start: number; end: number }[];
   bedtime: { enabled: boolean; start: number; end: number; grayscale: boolean };
   focusUntil: number;
+  focusMode: 'gentle' | 'deep';
+  focusAllow: string[];
+  /** Locked focus session: no "Open anyway". */
+  focusStrict: boolean;
+  strict: { enabled: boolean; sessionCap: number; cooldown: number };
+  /** Smart eye-rest reminder after this many minutes of continuous screen time. */
+  eye: { enabled: boolean; every: number; from: number; to: number };
   strings: Record<string, string>;
   suggestions: string[];
 };
@@ -36,7 +43,7 @@ export type NativeGuardEvent = {
   at: number;
   packageName: string;
   label: string;
-  reason: 'pause' | 'limit' | 'window' | 'bedtime' | 'focus';
+  reason: 'pause' | 'limit' | 'window' | 'bedtime' | 'focus' | 'session';
   choice: 'closed' | 'continued';
 };
 
