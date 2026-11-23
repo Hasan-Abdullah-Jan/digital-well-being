@@ -3,12 +3,16 @@
  * without anyone's real data. Values are generated relative to "today".
  */
 import { getContent } from '@/i18n';
+import { useBody } from '@/store/body';
 import { useCommunityLocal } from '@/store/community';
+import { useCrew } from '@/store/crew';
 import { useEvidence } from '@/store/evidence';
 import { useHabits } from '@/store/habits';
 import { useProgress } from '@/store/progress';
 import { useSettings } from '@/store/settings';
 import type {
+  BodyDay,
+  Crew,
   DailyUsage,
   ExerciseLog,
   GamingSession,
@@ -23,7 +27,7 @@ import { useWellbeing } from '@/store/wellbeing';
 import type { AnonNote, CommunityEvent, NoteMessage, PeerPost, PeerReply } from '@/services/community/types';
 import { longestRun } from '@/features/streaks';
 import { clamp, makeId } from '@/utils/misc';
-import { addDays, dateKey, HOUR, lastNDays, minutesToHHMM, parseDateKey, sleepHours, startOfDay } from '@/utils/time';
+import { addDays, addDaysToKey, dateKey, HOUR, lastNDays, minutesToHHMM, parseDateKey, sleepHours, startOfDay } from '@/utils/time';
 
 /** Small seeded random generator so the demo looks the same every time. */
 function rng(seed: number) {
@@ -360,5 +364,53 @@ export function seedDemoData(): void {
 
   useEvidence.setState({
     entries: [{ id: makeId('ev'), at: now - 5 * 24 * HOUR, where: demo.evidence.where, what: demo.evidence.what, who: demo.evidence.who, images: [] }],
+  });
+
+  // ---------- Eye & body ----------
+  const bodyDays: BodyDay[] = dates.slice(DAYS - 10).map((date, i) => {
+    const isToday = date === today;
+    return {
+      date,
+      water: isToday ? 3 : 4 + Math.floor(rand() * 5),
+      move: isToday ? 15 : 10 + Math.floor(rand() * 40),
+      stretch: isToday ? 1 : Math.floor(rand() * 4),
+      eye: isToday ? 2 : 2 + Math.floor(rand() * 6),
+      outdoor: isToday ? 10 : i % 3 === 0 ? 45 : Math.floor(rand() * 40),
+    };
+  });
+  useBody.setState({
+    days: bodyDays,
+    reminders: { eye: { enabled: true, every: 20 }, move: { enabled: true, every: 60 }, water: { enabled: false, every: 90 }, from: '08:00', to: '21:00' },
+  });
+
+  // ---------- Crew challenge with the family ----------
+  const habits = c.crewHabits.filter((h) => ['phone-free-dinner', 'walk', 'read', 'no-phone-bed'].includes(h.id));
+  const members = demo.crew.map((name, i) => ({ id: `demo-m${i}`, name, color: i, me: i === 0 }));
+  const start = addDaysToKey(today, -5);
+  const log: Crew['log'] = {};
+  for (let d = 0; d < 6; d++) {
+    const date = addDaysToKey(start, d);
+    const day: Record<string, string[]> = {};
+    members.forEach((m, mi) => {
+      const done = habits.filter((_, hi) => rand() < (date === today ? 0.35 : 0.55 + mi * 0.08 - hi * 0.05)).map((h) => h.id);
+      if (done.length) day[m.id] = done;
+    });
+    log[date] = day;
+  }
+  useCrew.setState({
+    crews: [
+      {
+        id: 'demo-crew',
+        name: demo.crewName,
+        createdAt: now - 5 * 24 * HOUR,
+        startDate: start,
+        days: 14,
+        reward: c.crewRewards[0] ?? '',
+        mode: 'versus',
+        members,
+        habits: habits.map((h) => ({ ...h })),
+        log,
+      },
+    ],
   });
 }

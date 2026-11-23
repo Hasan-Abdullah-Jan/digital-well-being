@@ -53,3 +53,7 @@ playwright-report/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Native module build output
+modules/*/android/build/
+modules/*/android/.cxx/

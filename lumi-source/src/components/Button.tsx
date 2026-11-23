@@ -23,6 +23,8 @@ export type ButtonProps = {
   small?: boolean;
   style?: ViewStyle;
   accessibilityHint?: string;
+  /** Defaults to the label. Needed for icon-only buttons (empty label). */
+  accessibilityLabel?: string;
   testID?: string;
 };
 
@@ -45,6 +47,7 @@ export function Button({
   small,
   style,
   accessibilityHint,
+  accessibilityLabel,
   testID,
 }: ButtonProps) {
   const { colors, radius, neu } = useTheme();
@@ -70,7 +73,7 @@ export function Button({
         onPress?.();
       }}
       accessibilityRole="button"
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
       accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: !!inactive, busy: !!loading }}
       style={({ pressed }) => [
@@ -98,15 +101,17 @@ export function Button({
       {gradient ? (
         <LinearGradient colors={gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[StyleSheet.absoluteFill, { borderRadius: radius.pill }]} />
       ) : null}
-      <View style={[styles.inner, { minHeight: height, paddingHorizontal: small ? 16 : 22 }]}>
+      <View style={[styles.inner, { minHeight: height, paddingHorizontal: label ? (small ? 16 : 22) : small ? 10 : 14 }]}>
         {loading ? (
           <ActivityIndicator color={fg} />
         ) : (
           <View style={styles.row}>
             {icon ? <Icon name={icon} size={small ? 18 : 20} color={fg} /> : null}
-            <Text variant={small ? 'smallStrong' : 'bodyStrong'} style={{ color: fg }} numberOfLines={2} align="center">
-              {label}
-            </Text>
+            {label ? (
+              <Text variant={small ? 'smallStrong' : 'bodyStrong'} style={{ color: fg }} numberOfLines={2} align="center">
+                {label}
+              </Text>
+            ) : null}
             {iconRight ? <Icon name={iconRight} size={small ? 18 : 20} color={fg} /> : null}
           </View>
         )}

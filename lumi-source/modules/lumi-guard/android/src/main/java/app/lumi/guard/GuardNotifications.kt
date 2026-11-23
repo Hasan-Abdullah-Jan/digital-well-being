@@ -16,6 +16,7 @@ object GuardNotifications {
   const val ID_SERVICE = 4101
   const val ID_NUDGE = 4102
   const val ID_BLOCKED = 4103
+  const val ID_EYE = 4104
 
   fun ensureChannels(context: Context, config: GuardConfig) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return

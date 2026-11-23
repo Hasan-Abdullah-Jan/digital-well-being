@@ -1,26 +1,31 @@
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
-import { Button } from '@/components/Button';
+import { Button, tapFeedback } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Icon, IconCircle } from '@/components/Icon';
-import { Pill, Row, Section } from '@/components/Layout';
+import { CrewCard } from '@/components/CrewCard';
+import { Pill, ProgressBar, Row, Section } from '@/components/Layout';
 import { MoodPicker } from '@/components/MoodPicker';
 import { Screen } from '@/components/Screen';
 import { Text } from '@/components/Text';
+import { checkBadges } from '@/features/badges';
 import { formatMinutes } from '@/features/celebrations';
+import { crewStatus } from '@/features/crew';
 import { featuredTools, TOOLS } from '@/features/personalise';
 import { greetingKey, nextWindow, useLastDays } from '@/features/selectors';
 import { currentStreakLength, isLoggedToday } from '@/features/streaks';
 import { personalisedQuotes } from '@/features/sync';
 import { useContent, useT } from '@/i18n';
 import { shouldOfferLowMoodSupport } from '@/safety/detect';
+import { dayOf, useBody } from '@/store/body';
+import { useCrew } from '@/store/crew';
 import { useHabits } from '@/store/habits';
 import { useProgress } from '@/store/progress';
 import { useSettings } from '@/store/settings';
 import { useWellbeing } from '@/store/wellbeing';
-import { useTheme } from '@/theme';
+import { TOUCH, useTheme } from '@/theme';
 import { pickDaily, shuffle } from '@/utils/misc';
 import { dateKey, formatClock, formatDate, formatTime } from '@/utils/time';
 
@@ -37,6 +42,12 @@ export default function Today() {
   const streaks = useProgress((s) => s.streaks);
   const logStreak = useProgress((s) => s.logStreak);
   const { days, source } = useLastDays(2);
+  const bodyDays = useBody((s) => s.days);
+  const bodyTargets = useBody((s) => s.targets);
+  const addBody = useBody((s) => s.add);
+  const crews = useCrew((s) => s.crews);
+  const bodyToday = dayOf(bodyDays);
+  const activeCrew = crews.find((c) => !c.archived && crewStatus(c) === 'active');
   const [quoteOffset, setQuoteOffset] = useState(0);
   const [swapSeed, setSwapSeed] = useState(0);
 
@@ -77,6 +88,12 @@ export default function Today() {
           <Button label={t('today.anotherQuote')} variant="ghost" small icon="refresh" onPress={() => setQuoteOffset((o) => o + 1)} style={{ alignSelf: 'flex-end', marginTop: 6 }} />
         </Card>
       ) : null}
+
+      <View style={{ flexDirection: 'row', gap: 10, marginBottom: 20 }} accessibilityRole="toolbar" accessibilityLabel={t('today.quickTitle')}>
+        {QUICK.map((q) => (
+          <QuickAction key={q.id} icon={q.icon} label={t(q.label)} onPress={() => router.push(q.route as never)} testID={`quick-${q.id}`} />
+        ))}
+      </View>
 
       {activeFocus || activeGaming ? (
         <Card tone="warning" style={{ marginBottom: 16 }} onPress={() => router.push(activeFocus ? '/habits/focus' : '/habits/gaming')}>
@@ -132,6 +149,39 @@ export default function Today() {
           </Card>
         )}
       </Section>
+
+      <Section title={t('today.bodyTitle')} action={<Button label={t('common.details')} variant="ghost" small onPress={() => router.push('/body')} />}>
+        <Card onPress={() => router.push('/body')} testID="card-body">
+          <Row>
+            <View style={{ flex: 1, gap: 8 }}>
+              {(['water', 'move', 'eye'] as const).map((m) => (
+                <View key={m} style={{ gap: 4 }}>
+                  <Row style={{ justifyContent: 'space-between' }}>
+                    <Text variant="small">{t(`body.metric.${m}`)}</Text>
+                    <Text variant="caption" color="textMuted">
+                      {bodyToday[m]}/{bodyTargets[m]}
+                    </Text>
+                  </Row>
+                  <ProgressBar value={bodyToday[m]} max={bodyTargets[m]} height={8} color={bodyToday[m] >= bodyTargets[m] ? colors.success : undefined} label={t(`body.metric.${m}`)} />
+                </View>
+              ))}
+            </View>
+            <View style={{ gap: 8 }}>
+              <Button label="" icon="water" small variant="soft" accessibilityLabel={t('today.addWater')} onPress={() => {
+                addBody('water', 1);
+                checkBadges();
+              }} testID="today-water" />
+              <Button label="" icon="eye" small variant="soft" accessibilityLabel={t('body.eyeBreakShort')} onPress={() => router.push('/body/eye-break')} />
+            </View>
+          </Row>
+        </Card>
+      </Section>
+
+      {activeCrew ? (
+        <Section title={t('today.crewTitle')}>
+          <CrewCard crew={activeCrew} />
+        </Section>
+      ) : null}
 
       <Section title={t('today.screenTitle')} action={<Button label={t('common.details')} variant="ghost" small onPress={() => router.push('/habits/usage')} />}>
         <Card onPress={() => router.push(todayMinutes === null && source !== 'device' ? '/habits/checkin' : '/habits/usage')}>
@@ -246,5 +296,47 @@ export default function Today() {
         </Section>
       ) : null}
     </Screen>
+  );
+}
+
+const QUICK = [
+  { id: 'mood', icon: 'happy-outline', label: 'today.quickMood', route: '/mind/mood' },
+  { id: 'focus', icon: 'flash-outline', label: 'today.quickFocus', route: '/habits/focus' },
+  { id: 'eye', icon: 'eye-outline', label: 'today.quickEye', route: '/body/eye-break' },
+  { id: 'breathe', icon: 'leaf-outline', label: 'today.quickBreathe', route: '/mind/breathe' },
+];
+
+function QuickAction({ icon, label, onPress, testID }: { icon: string; label: string; onPress: () => void; testID?: string }) {
+  const { colors, radius, neu } = useTheme();
+  return (
+    <Pressable
+      testID={testID}
+      onPress={() => {
+        tapFeedback();
+        onPress();
+      }}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      style={({ pressed }) => ({
+        flex: 1,
+        minHeight: TOUCH + 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 6,
+        paddingVertical: 12,
+        paddingHorizontal: 4,
+        borderRadius: radius.lg,
+        backgroundColor: colors.surface,
+        boxShadow: pressed ? neu.insetSm : neu.raisedSm,
+        transform: [{ scale: pressed ? 0.97 : 1 }],
+      })}
+    >
+      <View style={{ width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primarySoft }}>
+        <Icon name={icon} size={22} color={colors.primary} />
+      </View>
+      <Text variant="caption" align="center" numberOfLines={1} style={{ color: colors.text }}>
+        {label}
+      </Text>
+    </Pressable>
   );
 }

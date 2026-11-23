@@ -4,12 +4,15 @@
  */
 import { getContent, t } from '@/i18n';
 import { useApp } from '@/store/app';
+import { BODY_METRICS, useBody } from '@/store/body';
+import { useCrew } from '@/store/crew';
 import { useHabits } from '@/store/habits';
 import { useProgress } from '@/store/progress';
 import { useSettings } from '@/store/settings';
 import { useWellbeing } from '@/store/wellbeing';
 import { addDaysToKey, dateKey, lastNDays, weekDays, weekKey } from '@/utils/time';
 
+import { crewStatus } from './crew';
 import { currentStreakLength } from './streaks';
 import { averageMinutes, minutesForDays } from './usage';
 
@@ -79,6 +82,24 @@ const rules: Rule[] = [
   { id: 'goal-getter', earned: () => useProgress.getState().goals.some((g) => !!g.completedAt) },
   { id: 'reflector', earned: () => useProgress.getState().reflections.length >= 1 },
   { id: 'step-away', earned: () => useHabits.getState().guardEvents.filter((e) => e.choice === 'closed').length >= 5 },
+  {
+    id: 'locked-in',
+    earned: () => useHabits.getState().focusSessions.some((f) => f.completed && (f.mode === 'deep' || f.locked)),
+  },
+  { id: 'eye-care', earned: () => useBody.getState().days.reduce((sum, d) => sum + d.eye, 0) >= 10 },
+  {
+    id: 'body-balance',
+    earned: () => {
+      const { days, targets } = useBody.getState();
+      return days.some((d) => BODY_METRICS.every((m) => d[m] >= targets[m]));
+    },
+  },
+  { id: 'crew-up', earned: () => useCrew.getState().crews.length >= 1 },
+  {
+    id: 'crew-finish',
+    earned: () =>
+      useCrew.getState().crews.some((c) => crewStatus(c) === 'finished' && Object.keys(c.log).some((d) => d >= c.startDate)),
+  },
 ];
 
 function completedChallengeOfKind(kind: 'detox' | 'offline'): boolean {

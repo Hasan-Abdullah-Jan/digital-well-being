@@ -6,8 +6,10 @@ import { IconCircle } from '@/components/Icon';
 import { ListRow, Row, Section, Stat } from '@/components/Layout';
 import { Screen } from '@/components/Screen';
 import { Text } from '@/components/Text';
+import { crewStatus } from '@/features/crew';
 import { currentStreakLength } from '@/features/streaks';
 import { useContent, useT } from '@/i18n';
+import { useCrew } from '@/store/crew';
 import { useProgress } from '@/store/progress';
 import { useSettings } from '@/store/settings';
 import { useWellbeing } from '@/store/wellbeing';
@@ -24,6 +26,7 @@ export default function Me() {
   const challenges = useProgress((s) => s.challenges);
   const wins = useWellbeing((s) => s.journal.filter((j) => j.type === 'win').length);
   const best = streaks.reduce((m, s) => Math.max(m, currentStreakLength(s)), 0);
+  const crewCount = useCrew((s) => s.crews.filter((c) => !c.archived && crewStatus(c) !== 'finished').length);
   const activeChallenges = Object.values(challenges).filter((c) => !c.completedAt).length;
 
   return (
@@ -53,6 +56,11 @@ export default function Me() {
         <ListRow icon="flame-outline" title={t('me.streaks')} subtitle={streaks.length ? t('me.streaksCount', { count: streaks.length }) : t('me.streaksEmpty')} onPress={() => router.push('/me/streaks')} />
         <ListRow icon="trophy-outline" title={t('tools.challenges')} subtitle={activeChallenges ? t('me.challengesCount', { count: activeChallenges }) : t('me.challengesEmpty')} onPress={() => router.push('/me/challenges')} />
         <ListRow icon="ribbon-outline" title={t('me.badgesTitle')} subtitle={t('me.badgesSub')} onPress={() => router.push('/me/badges')} />
+      </Section>
+
+      <Section title={t('me.togetherTitle')}>
+        <ListRow icon="people-circle-outline" tone="accent" title={t('crew.title')} subtitle={crewCount ? t('habits.crewCount', { count: crewCount }) : t('habits.crewSub')} onPress={() => router.push('/crew')} testID="row-me-crew" />
+        <ListRow icon="eye-outline" title={t('body.title')} subtitle={t('me.bodySub')} onPress={() => router.push('/body')} />
       </Section>
 
       <Section title={t('me.settingsTitle')}>

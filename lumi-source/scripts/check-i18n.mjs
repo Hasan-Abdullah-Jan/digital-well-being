@@ -30,6 +30,10 @@ const DYNAMIC = {
   'insights.highlight': ['screenDown', 'moodUp', 'sleepGood', 'focusDone', 'winsLogged', 'steppedAway', 'gamingBudget'],
   'insights.pattern': ['sleepMood', 'sleepMoodReverse', 'screenMood', 'screenMoodReverse', 'afterScrollWorse', 'afterScrollBetter', 'gamingLong', 'calmMood'],
   'time.ago': ['now', 'minutes', 'hours', 'days'],
+  'body.metric': ['water', 'move', 'stretch', 'eye', 'outdoor'],
+  'body.unit': ['water', 'move', 'stretch', 'eye', 'outdoor'],
+  'body.reminder': ['eye', 'move', 'water', 'eyeSub', 'moveSub', 'waterSub'],
+  'notifications.body': ['eyeTitle', 'eyeBody', 'moveTitle', 'moveBody', 'waterTitle', 'waterBody'],
 };
 
 function lookup(key) {

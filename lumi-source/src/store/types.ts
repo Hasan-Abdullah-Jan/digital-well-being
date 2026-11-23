@@ -118,6 +118,9 @@ export type BedtimeSettings = {
   grayscale: boolean;
 };
 
+/** gentle: only apps in App limits pause. deep: every app pauses except the ones you allow. */
+export type FocusMode = 'gentle' | 'deep';
+
 export type FocusSession = {
   id: string;
   startedAt: number;
@@ -125,7 +128,24 @@ export type FocusSession = {
   endedAt?: number;
   completed: boolean;
   label?: string;
+  mode?: FocusMode;
+  locked?: boolean;
 };
+
+export type StrictSettings = {
+  /** No "Open anyway" once a limit, phone-free time, bedtime or focus session applies. */
+  enabled: boolean;
+  /** Longest single session in a limited app before it locks (0 = off). */
+  sessionCapMinutes: number;
+  /** How long a limited app stays locked after hitting the session cap. */
+  cooldownMinutes: number;
+  /** Commitment lock: rules can be tightened but not loosened until this time (0 = off). */
+  lockedUntil: number;
+  /** Emergency unlock: started at this time, completes after a waiting period. */
+  unlockRequestedAt?: number;
+};
+
+export type AllowedApp = { packageName: string; label: string };
 
 export type GamingSession = {
   id: string;
@@ -160,7 +180,7 @@ export type GuardEvent = {
   at: number;
   packageName: string;
   label: string;
-  reason: 'pause' | 'limit' | 'window' | 'bedtime' | 'focus';
+  reason: 'pause' | 'limit' | 'window' | 'bedtime' | 'focus' | 'session';
   choice: 'closed' | 'continued';
 };
 
@@ -212,4 +232,43 @@ export type EvidenceEntry = {
   who?: string;
   /** Local file URIs of screenshots copied into the app's private folder. */
   images: string[];
+};
+
+// ----- Body -----
+export type BodyMetric = 'water' | 'move' | 'stretch' | 'eye' | 'outdoor';
+
+export type BodyDay = { date: string } & Record<BodyMetric, number>;
+
+export type BodyReminder = { enabled: boolean; every: number };
+
+export type BodyReminders = {
+  eye: BodyReminder;
+  move: BodyReminder;
+  water: BodyReminder;
+  /** Reminders only between these times (HH:MM). */
+  from: string;
+  to: string;
+};
+
+// ----- Crew challenges (offline, family and friends) -----
+export type CrewMember = { id: string; name: string; color: number; me?: boolean };
+
+export type CrewHabit = { id: string; title: string; icon: string; points: number };
+
+export type Crew = {
+  id: string;
+  name: string;
+  createdAt: number;
+  /** First day (YYYY-MM-DD). */
+  startDate: string;
+  days: number;
+  /** What the winner gets, or what the team earns together. */
+  reward: string;
+  /** versus: friendly leaderboard. team: everyone works towards one shared goal. */
+  mode: 'versus' | 'team';
+  members: CrewMember[];
+  habits: CrewHabit[];
+  /** date -> memberId -> habit ids done that day. */
+  log: Record<string, Record<string, string[]>>;
+  archived?: boolean;
 };

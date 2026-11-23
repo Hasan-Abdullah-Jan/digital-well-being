@@ -10,7 +10,9 @@ import { guard } from '@/native/guard';
 import { getCommunity } from '@/services/community';
 import { cancelAllNotifications } from '@/services/notifications';
 import { useApp } from '@/store/app';
+import { useBody } from '@/store/body';
 import { useCommunityLocal } from '@/store/community';
+import { useCrew } from '@/store/crew';
 import { useEvidence } from '@/store/evidence';
 import { useHabits } from '@/store/habits';
 import { useProgress } from '@/store/progress';
@@ -36,6 +38,8 @@ export function buildExport(): Record<string, unknown> {
     wellbeing: plain(useWellbeing.getState()),
     habits: plain(useHabits.getState()),
     progress: plain(useProgress.getState()),
+    body: plain(useBody.getState()),
+    crews: plain(useCrew.getState()),
     evidence: useEvidence.getState().entries.map((e) => ({ ...e, images: e.images.map((uri) => uri.split('/').pop()) })),
     community: {
       reactions: community.reactions,

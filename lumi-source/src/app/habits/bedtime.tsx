@@ -15,7 +15,7 @@ import { guard } from '@/native/guard';
 import { syncGuard } from '@/services/guardSync';
 import { syncReminders } from '@/services/notifications';
 import { useApp } from '@/store/app';
-import { useHabits } from '@/store/habits';
+import { isCommitLocked, useHabits } from '@/store/habits';
 import { useSettings } from '@/store/settings';
 import { useTheme } from '@/theme';
 import { sleepHours } from '@/utils/time';
@@ -26,6 +26,7 @@ export default function Bedtime() {
   const { colors, radius } = useTheme();
   const bedtime = useHabits((s) => s.bedtime);
   const setBedtime = useHabits((s) => s.setBedtime);
+  const locked = useHabits((s) => isCommitLocked(s.strict));
   const settings = useSettings();
   const demo = useApp((s) => s.demoMode);
   const [checked, setChecked] = useState<string[]>([]);
@@ -40,7 +41,7 @@ export default function Bedtime() {
 
   return (
     <Screen title={t('tools.bedtime')} subtitle={t('bedtime.subtitle')} testID="screen-bedtime">
-      <ToggleRow icon="moon-outline" title={t('bedtime.enable')} subtitle={t('bedtime.enableSub')} value={bedtime.enabled} onChange={(enabled) => apply({ enabled })} testID="toggle-bedtime" />
+      <ToggleRow icon="moon-outline" title={t('bedtime.enable')} subtitle={t('bedtime.enableSub')} value={bedtime.enabled} disabled={locked && bedtime.enabled} onChange={(enabled) => apply({ enabled })} testID="toggle-bedtime" />
 
       <Section title={t('bedtime.times')} style={{ marginTop: 20 }}>
         <Row>
@@ -80,7 +81,7 @@ export default function Bedtime() {
       <Section title={t('bedtime.phoneTitle')}>
         {android ? (
           <>
-            <ToggleRow title={t('bedtime.lockApps')} subtitle={t('bedtime.lockAppsSub')} value={bedtime.lockApps} onChange={(lockApps) => apply({ lockApps })} />
+            <ToggleRow title={t('bedtime.lockApps')} subtitle={t('bedtime.lockAppsSub')} value={bedtime.lockApps} disabled={locked && bedtime.lockApps} onChange={(lockApps) => apply({ lockApps })} />
             <ToggleRow
               title={t('bedtime.grayscale')}
               subtitle={grayscaleAllowed || demo ? t('bedtime.grayscaleSub') : t('bedtime.grayscaleNeedsSetup')}

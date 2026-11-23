@@ -86,18 +86,28 @@ class PauseActivity : Activity() {
     val usedMs = intent.getLongExtra(EXTRA_USED_MS, 0L)
     val limitMinutes = intent.getIntExtra(EXTRA_LIMIT_MINUTES, 0)
     val windowLabel = intent.getStringExtra(EXTRA_WINDOW) ?: ""
+    val until = intent.getLongExtra(EXTRA_UNTIL, 0L)
+    val hard = intent.getBooleanExtra(EXTRA_HARD, false)
+    val minutesLeft = if (until > System.currentTimeMillis()) ((until - System.currentTimeMillis() + 59_999L) / 60_000L) else 0L
 
     fun fill(template: String): String = template
       .replace("{{app}}", label)
       .replace("{{used}}", formatMinutes(usedMs / 60_000L))
       .replace("{{limit}}", formatMinutes(limitMinutes.toLong()))
       .replace("{{window}}", windowLabel)
+      .replace("{{left}}", formatMinutes(minutesLeft))
+      .replace("{{cap}}", formatMinutes(config.strict.sessionCap.toLong()))
 
     val (titleKey, bodyKey, titleFallback, bodyFallback) = when (reason) {
       "limit" -> Quad("limitTitle", "limitBody", "You've reached your {{app}} limit", "You've used {{app}} for {{used}} today (your limit is {{limit}}).")
       "window" -> Quad("windowTitle", "windowBody", "It's {{window}}", "You asked Lumi to keep {{app}} quiet right now.")
       "bedtime" -> Quad("bedtimeTitle", "bedtimeBody", "Time to wind down", "It's past your bedtime. Your future self will thank you.")
-      "focus" -> Quad("focusTitle", "focusBody", "You're in focus mode", "{{app}} will be here when your focus session ends.")
+      "focus" -> if (config.focusMode == "deep") {
+        Quad("focusTitle", "focusDeepBody", "You're in focus mode", "Deep focus is on, so only the apps you allowed are open for {{left}}.")
+      } else {
+        Quad("focusTitle", "focusBody", "You're in focus mode", "{{app}} will be here when your focus session ends.")
+      }
+      "session" -> Quad("sessionTitle", "sessionBody", "Time for a break from {{app}}", "That was {{cap}} in one go. {{app}} unlocks again in {{left}}.")
       else -> Quad("pauseTitle", "pauseBody", "Pause and think", "You're opening {{app}}. What do you want to do there?")
     }
     val waitSeconds = when (reason) {
@@ -182,6 +192,24 @@ class PauseActivity : Activity() {
     val close = button(fill(config.string("closeApp", "Close {{app}}")), filled = true)
     close.setOnClickListener { closeTarget() }
     column.addView(close, buttonParams(dp(28)))
+
+    if (hard) {
+      val noteKey = if (reason == "focus" && config.focusStrict && !config.strict.enabled) "lockedFocusNote" else "strictNote"
+      val noteFallback = if (noteKey == "lockedFocusNote") "You locked this focus session, so there's no skipping it. You've got this." else "Strict mode is on, so there's no skipping this one. You chose this to protect your time."
+      val note = textView(config.string(noteKey, noteFallback), 14f, muted, bold = true)
+      note.gravity = Gravity.CENTER
+      column.addView(note, marginTop(16))
+      val footer = textView(config.string("footer", "You set this up in Lumi, and you're in charge."), 13f, muted)
+      footer.gravity = Gravity.CENTER
+      column.addView(footer, marginTop(20))
+      applyInsets(root)
+      setContentView(root)
+      title.announceForAccessibility(title.text)
+      closeTargetPackage = pkg
+      closeTargetLabel = label
+      closeTargetReason = reason
+      return
+    }
 
     val openAnyway = button(config.string("openAnyway", "Open anyway"), filled = false)
     openAnyway.isEnabled = false
@@ -307,5 +335,7 @@ class PauseActivity : Activity() {
     const val EXTRA_USED_MS = "lumi.usedMs"
     const val EXTRA_LIMIT_MINUTES = "lumi.limitMinutes"
     const val EXTRA_WINDOW = "lumi.window"
+    const val EXTRA_UNTIL = "lumi.until"
+    const val EXTRA_HARD = "lumi.hard"
   }
 }

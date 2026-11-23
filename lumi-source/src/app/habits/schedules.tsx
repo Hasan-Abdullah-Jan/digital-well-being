@@ -15,7 +15,7 @@ import { guard } from '@/native/guard';
 import { syncGuard } from '@/services/guardSync';
 import { syncReminders } from '@/services/notifications';
 import { useApp } from '@/store/app';
-import { useHabits } from '@/store/habits';
+import { isCommitLocked, useHabits } from '@/store/habits';
 import type { PhoneFreeWindow, WindowKind } from '@/store/types';
 import { confirm } from '@/utils/confirm';
 import { formatClock } from '@/utils/time';
@@ -39,6 +39,8 @@ export default function Schedules() {
   const upsert = useHabits((s) => s.upsertWindow);
   const remove = useHabits((s) => s.removeWindow);
   const demo = useApp((s) => s.demoMode);
+  const showToast = useApp((s) => s.showToast);
+  const locked = useHabits((s) => isCommitLocked(s.strict));
   const [draft, setDraft] = useState<Draft | null>(null);
   const canLock = guard.isAvailable() || demo;
 
@@ -66,7 +68,7 @@ export default function Schedules() {
           <EmptyState icon="calendar-outline" title={t('windows.emptyTitle')} body={t('windows.emptyBody')} />
         ) : (
           windows.map((w) => (
-            <Card key={w.id} onPress={() => setDraft({ ...w })} accessibilityHint={t('common.edit')}>
+            <Card key={w.id} onPress={() => (locked ? showToast(t('strict.lockedToast')) : setDraft({ ...w }))} accessibilityHint={t('common.edit')}>
               <Row>
                 <IconCircle name={content.windowKinds.find((k) => k.id === w.kind)?.icon ?? 'time-outline'} tone={w.enabled ? 'primary' : 'neutral'} />
                 <View style={{ flex: 1 }}>

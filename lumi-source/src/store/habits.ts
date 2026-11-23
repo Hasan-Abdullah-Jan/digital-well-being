@@ -6,24 +6,37 @@ import { dateKey } from '@/utils/time';
 
 import { persistOptions } from './storage';
 import type {
+  AllowedApp,
   AppLimit,
   BedtimeSettings,
   DailyUsage,
+  FocusMode,
   FocusSession,
   GamingSession,
   GuardEvent,
   PhoneFreeWindow,
   ScreenCheckin,
+  StrictSettings,
 } from './types';
 
 export type ActiveTimer = { id: string; startedAt: number; endsAt: number; label?: string };
+export type ActiveFocus = ActiveTimer & { mode: FocusMode; locked: boolean };
+
+/** How long an emergency unlock of the commitment lock takes. */
+export const UNLOCK_WAIT_MS = 15 * 60_000;
 
 export type HabitsData = {
   limits: AppLimit[];
   windows: PhoneFreeWindow[];
   bedtime: BedtimeSettings;
   focusSessions: FocusSession[];
-  activeFocus: ActiveTimer | null;
+  activeFocus: ActiveFocus | null;
+  /** Default focus options, remembered between sessions. */
+  focusMode: FocusMode;
+  focusLocked: boolean;
+  /** Apps that stay usable in deep focus (calls, messages and Lumi are always allowed). */
+  focusAllow: AllowedApp[];
+  strict: StrictSettings;
   gamingBudgetMinutes: number;
   gamingSessions: GamingSession[];
   activeGaming: (ActiveTimer & { game?: string }) | null;
@@ -41,7 +54,14 @@ type HabitsActions = {
   upsertWindow: (w: Omit<PhoneFreeWindow, 'id'> & { id?: string }) => void;
   removeWindow: (id: string) => void;
   setBedtime: (patch: Partial<BedtimeSettings>) => void;
-  startFocus: (minutes: number, label?: string) => ActiveTimer;
+  startFocus: (minutes: number, label?: string) => ActiveFocus;
+  setFocusOptions: (patch: Partial<Pick<HabitsData, 'focusMode' | 'focusLocked' | 'focusAllow'>>) => void;
+  setStrict: (patch: Partial<StrictSettings>) => void;
+  lockStrict: (days: number) => void;
+  requestUnlock: () => void;
+  cancelUnlock: () => void;
+  /** Finishes an emergency unlock if the waiting period is over. */
+  completeUnlock: () => boolean;
   endFocus: (completed: boolean) => FocusSession | null;
   setGamingBudget: (minutes: number) => void;
   startGaming: (minutes: number, game?: string) => ActiveTimer;
@@ -62,6 +82,10 @@ export const initialHabits = (): HabitsData => ({
   bedtime: { enabled: false, windDownMinutes: 30, lockApps: true, grayscale: false },
   focusSessions: [],
   activeFocus: null,
+  focusMode: 'gentle',
+  focusLocked: false,
+  focusAllow: [],
+  strict: { enabled: false, sessionCapMinutes: 0, cooldownMinutes: 30, lockedUntil: 0 },
   gamingBudgetMinutes: 7 * 60,
   gamingSessions: [],
   activeGaming: null,
@@ -99,9 +123,35 @@ export const useHabits = create<HabitsState>()(
       setBedtime: (patch) => set((s) => ({ bedtime: { ...s.bedtime, ...patch } })),
       startFocus: (minutes, label) => {
         const now = Date.now();
-        const timer: ActiveTimer = { id: makeId('f'), startedAt: now, endsAt: now + minutes * 60_000, label };
+        const { focusMode, focusLocked } = get();
+        const timer: ActiveFocus = {
+          id: makeId('f'),
+          startedAt: now,
+          endsAt: now + minutes * 60_000,
+          label,
+          mode: focusMode,
+          locked: focusLocked,
+        };
         set({ activeFocus: timer });
         return timer;
+      },
+      setFocusOptions: (patch) => set(patch),
+      setStrict: (patch) => set((s) => ({ strict: { ...s.strict, ...patch } })),
+      lockStrict: (days) =>
+        set((s) => ({
+          strict: {
+            ...s.strict,
+            lockedUntil: Math.max(s.strict.lockedUntil, Date.now() + days * 24 * 60 * 60_000),
+            unlockRequestedAt: undefined,
+          },
+        })),
+      requestUnlock: () => set((s) => ({ strict: { ...s.strict, unlockRequestedAt: Date.now() } })),
+      cancelUnlock: () => set((s) => ({ strict: { ...s.strict, unlockRequestedAt: undefined } })),
+      completeUnlock: () => {
+        const { strict } = get();
+        if (!strict.unlockRequestedAt || Date.now() - strict.unlockRequestedAt < UNLOCK_WAIT_MS) return false;
+        set({ strict: { ...strict, lockedUntil: 0, unlockRequestedAt: undefined } });
+        return true;
       },
       endFocus: (completed) => {
         const active = get().activeFocus;
@@ -113,6 +163,8 @@ export const useHabits = create<HabitsState>()(
           endedAt: Date.now(),
           completed,
           label: active.label,
+          mode: active.mode,
+          locked: active.locked,
         };
         set((s) => ({ activeFocus: null, focusSessions: capList([...s.focusSessions, session], 1000) }));
         return session;
@@ -178,3 +230,8 @@ export const useHabits = create<HabitsState>()(
     persistOptions<HabitsState>('habits', initialHabits),
   ),
 );
+
+/** True while the commitment lock is on: rules can be made stricter, not looser. */
+export function isCommitLocked(strict: StrictSettings, now = Date.now()): boolean {
+  return strict.lockedUntil > now;
+}

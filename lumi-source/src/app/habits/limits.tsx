@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AppState, Platform, Pressable, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { AppState, Platform, View } from 'react-native';
 
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
@@ -8,19 +8,20 @@ import { Icon, IconCircle } from '@/components/Icon';
 import { Stepper, TextField } from '@/components/Inputs';
 import { ListRow, Row, Section, ToggleRow } from '@/components/Layout';
 import { Screen } from '@/components/Screen';
-import { Sheet } from '@/components/Sheet';
-import { EmptyState, LoadingState } from '@/components/States';
+import { AppPickerSheet } from '@/components/AppPicker';
+import { EmptyState } from '@/components/States';
 import { Text } from '@/components/Text';
 import { formatMinutes } from '@/features/celebrations';
-import { useContent, useT } from '@/i18n';
-import { guard, type NativeApp } from '@/native/guard';
+import { useT } from '@/i18n';
+import { guard } from '@/native/guard';
 import { syncGuard } from '@/services/guardSync';
 import { useApp } from '@/store/app';
-import { useHabits } from '@/store/habits';
+import { isCommitLocked, useHabits } from '@/store/habits';
 import { useSettings } from '@/store/settings';
 import type { AppLimit } from '@/store/types';
 import { useTheme } from '@/theme';
 import { confirm } from '@/utils/confirm';
+import { formatDate, formatTime } from '@/utils/time';
 
 function usePermissionStatus() {
   const [state, setState] = useState({ usage: guard.hasUsageAccess(), overlay: guard.canDrawOverlays() });
@@ -39,7 +40,6 @@ function usePermissionStatus() {
 
 export default function Limits() {
   const { t } = useT();
-  const content = useContent();
   const { colors } = useTheme();
   const demo = useApp((s) => s.demoMode);
   const limits = useHabits((s) => s.limits);
@@ -48,6 +48,8 @@ export default function Limits() {
   const watched = useSettings((s) => s.watchedApps);
   const frictionMinutes = useSettings((s) => s.frictionMinutes);
   const updateSettings = useSettings((s) => s.update);
+  const strict = useHabits((s) => s.strict);
+  const locked = isCommitLocked(strict);
   const perms = usePermissionStatus();
   const [adding, setAdding] = useState(false);
   const canEnforce = guard.isAvailable();
@@ -107,9 +109,9 @@ export default function Limits() {
           <ToggleRow
             icon="shield-checkmark-outline"
             title={t('limits.guardToggle')}
-            subtitle={!perms.usage ? t('limits.needUsage') : guardEnabled ? t('limits.guardOn') : t('limits.guardOff')}
+            subtitle={!perms.usage ? t('limits.needUsage') : locked && guardEnabled ? t('strict.cantLoosen') : guardEnabled ? t('limits.guardOn') : t('limits.guardOff')}
             value={guardEnabled && perms.usage}
-            disabled={!perms.usage}
+            disabled={!perms.usage || (locked && guardEnabled)}
             onChange={(v) => change(() => habits.setGuardEnabled(v))}
             testID="toggle-guard"
           />
@@ -122,6 +124,31 @@ export default function Limits() {
         </Card>
       )}
 
+      {locked ? (
+        <Card tone="primary" style={{ marginBottom: 16 }} onPress={() => router.push('/habits/strict')}>
+          <Row style={{ alignItems: 'flex-start' }}>
+            <IconCircle name="lock-closed" />
+            <View style={{ flex: 1 }}>
+              <Text variant="bodyStrong" color="onPrimarySoft">
+                {t('strict.lockedBannerTitle')}
+              </Text>
+              <Text variant="small" color="onPrimarySoft">
+                {t('strict.lockedBannerBody', { date: formatDate(strict.lockedUntil, { weekday: 'short', day: 'numeric', month: 'short' }), time: formatTime(strict.lockedUntil) })}
+              </Text>
+            </View>
+          </Row>
+        </Card>
+      ) : null}
+
+      <ListRow
+        icon="shield-half-outline"
+        title={t('strict.title')}
+        subtitle={strict.enabled ? t('strict.rowOn') : t('strict.rowOff')}
+        onPress={() => router.push('/habits/strict')}
+        testID="row-strict"
+      />
+      <View style={{ height: 24 }} />
+
       <Section title={t('limits.yourApps')}>
         {limits.length === 0 ? (
           <EmptyState icon="apps-outline" title={t('limits.emptyTitle')} body={t('limits.emptyBody')} />
@@ -130,6 +157,7 @@ export default function Limits() {
             <LimitCard
               key={limit.id}
               limit={limit}
+              locked={locked}
               watched={watched.includes(limit.packageName)}
               onToggleWatched={() => toggleWatched(limit.packageName)}
               onChange={(patch) => change(() => habits.upsertLimit({ ...limit, ...patch }))}
@@ -175,11 +203,10 @@ export default function Limits() {
         </Row>
       </Card>
 
-      <AddAppSheet
+      <AppPickerSheet
         visible={adding}
         onClose={() => setAdding(false)}
         existing={limits.map((l) => l.packageName)}
-        demoApps={content.demo.apps}
         onPick={(app) => {
           change(() => habits.upsertLimit({ packageName: app.packageName, label: app.label, minutesPerDay: 30, pauseOnOpen: true, enabled: true }));
           setAdding(false);
@@ -208,12 +235,14 @@ function PermissionLine({ ok, label, hint, onFix }: { ok: boolean; label: string
 
 function LimitCard({
   limit,
+  locked,
   watched,
   onChange,
   onToggleWatched,
   onRemove,
 }: {
   limit: AppLimit;
+  locked: boolean;
   watched: boolean;
   onChange: (patch: Partial<AppLimit>) => void;
   onToggleWatched: () => void;
@@ -226,94 +255,22 @@ function LimitCard({
         <Text variant="heading" style={{ flex: 1 }} numberOfLines={1}>
           {limit.label}
         </Text>
-        <Button label={t('common.remove')} variant="ghost" small onPress={onRemove} />
+        {locked ? <Icon name="lock-closed-outline" size={18} /> : <Button label={t('common.remove')} variant="ghost" small onPress={onRemove} />}
       </Row>
       <View style={{ gap: 10 }}>
         <Stepper
           label={t('limits.dailyLimit')}
           value={limit.minutesPerDay}
-          min={0}
-          max={480}
+          min={locked && limit.minutesPerDay > 0 ? 15 : 0}
+          max={locked && limit.minutesPerDay > 0 ? limit.minutesPerDay : 480}
           step={15}
           format={(v) => (v === 0 ? t('limits.noLimit') : formatMinutes(v))}
           onChange={(minutesPerDay) => onChange({ minutesPerDay })}
         />
-        <ToggleRow title={t('limits.pauseOnOpen')} subtitle={t('limits.pauseOnOpenSub')} value={limit.pauseOnOpen} onChange={(pauseOnOpen) => onChange({ pauseOnOpen })} />
+        <ToggleRow title={t('limits.pauseOnOpen')} subtitle={t('limits.pauseOnOpenSub')} value={limit.pauseOnOpen} disabled={locked && limit.pauseOnOpen} onChange={(pauseOnOpen) => onChange({ pauseOnOpen })} />
         <ToggleRow title={t('limits.longSession')} subtitle={t('limits.longSessionSub')} value={watched} onChange={onToggleWatched} />
-        <ToggleRow title={t('limits.active')} value={limit.enabled} onChange={(enabled) => onChange({ enabled })} />
+        <ToggleRow title={t('limits.active')} value={limit.enabled} disabled={locked && limit.enabled} onChange={(enabled) => onChange({ enabled })} />
       </View>
     </Card>
-  );
-}
-
-function AddAppSheet({
-  visible,
-  onClose,
-  existing,
-  demoApps,
-  onPick,
-}: {
-  visible: boolean;
-  onClose: () => void;
-  existing: string[];
-  demoApps: { packageName: string; label: string; category: string }[];
-  onPick: (app: NativeApp) => void;
-}) {
-  const { t } = useT();
-  const { colors, radius } = useTheme();
-  const [apps, setApps] = useState<NativeApp[] | null>(null);
-  const [query, setQuery] = useState('');
-
-  useEffect(() => {
-    if (!visible) return;
-    let alive = true;
-    (async () => {
-      const list = guard.isAvailable() ? await guard.getLaunchableApps() : demoApps;
-      if (alive) setApps(list);
-    })();
-    return () => {
-      alive = false;
-    };
-  }, [visible, demoApps]);
-
-  const filtered = useMemo(
-    () => (apps ?? []).filter((a) => !existing.includes(a.packageName) && a.label.toLowerCase().includes(query.trim().toLowerCase())),
-    [apps, existing, query],
-  );
-
-  return (
-    <Sheet visible={visible} onClose={onClose} title={t('limits.pickApp')}>
-      <TextField label={t('limits.search')} value={query} onChangeText={setQuery} autoCorrect={false} />
-      {apps === null ? (
-        <LoadingState />
-      ) : filtered.length === 0 ? (
-        <Text variant="small" color="textMuted">
-          {t('limits.noApps')}
-        </Text>
-      ) : (
-        filtered.slice(0, 80).map((app) => (
-          <Pressable
-            key={app.packageName}
-            onPress={() => onPick(app)}
-            accessibilityRole="button"
-            accessibilityLabel={app.label}
-            style={({ pressed }) => ({
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 12,
-              padding: 12,
-              borderRadius: radius.md,
-              backgroundColor: pressed ? colors.surfaceAlt : colors.surface,
-            })}
-          >
-            <IconCircle name={app.category === 'game' ? 'game-controller-outline' : app.category === 'social' ? 'people-outline' : app.category === 'video' ? 'play-circle-outline' : 'apps-outline'} size={36} tone="neutral" />
-            <Text variant="bodyStrong" style={{ flex: 1 }}>
-              {app.label}
-            </Text>
-            <Icon name="add-circle-outline" color={colors.primary} />
-          </Pressable>
-        ))
-      )}
-    </Sheet>
   );
 }

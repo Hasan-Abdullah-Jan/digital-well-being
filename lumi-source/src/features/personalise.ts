@@ -33,17 +33,20 @@ export type ToolId =
   | 'stress'
   | 'safety'
   | 'evidence'
-  | 'challenges';
+  | 'challenges'
+  | 'strict'
+  | 'body'
+  | 'crew';
 
 /** Tools to feature on the Today screen, in order, based on what the user said matters. */
 const CONCERN_TOOLS: Record<ConcernId, ToolId[]> = {
-  scrolling: ['limits', 'after-scroll', 'challenges'],
+  scrolling: ['limits', 'strict', 'after-scroll', 'crew'],
   sleep: ['bedtime', 'sleep'],
-  focus: ['focus', 'stress'],
-  gaming: ['gaming', 'challenges'],
+  focus: ['focus', 'strict', 'body'],
+  gaming: ['gaming', 'crew', 'challenges'],
   comparison: ['reality', 'after-scroll', 'journal'],
-  escapism: ['challenges', 'nudges', 'reality'],
-  lonely: ['nudges', 'peer'],
+  escapism: ['crew', 'challenges', 'nudges'],
+  lonely: ['crew', 'nudges', 'peer'],
   stress: ['breathe', 'stress'],
   'low-mood': ['journal', 'breathe', 'peer'],
   harassment: ['safety', 'evidence'],
@@ -78,6 +81,9 @@ export const TOOLS: Record<ToolId, { icon: string; route: string; key: string }>
   sleep: { icon: 'bed-outline', route: '/mind/sleep', key: 'tools.sleep' },
   stress: { icon: 'pulse-outline', route: '/mind/stress', key: 'tools.stress' },
   safety: { icon: 'shield-checkmark-outline', route: '/connect/safety', key: 'tools.safety' },
+  strict: { icon: 'shield-half-outline', route: '/habits/strict', key: 'strict.title' },
+  body: { icon: 'eye-outline', route: '/body', key: 'body.title' },
+  crew: { icon: 'people-circle-outline', route: '/crew', key: 'crew.title' },
   evidence: { icon: 'folder-open-outline', route: '/connect/evidence', key: 'tools.evidence' },
   challenges: { icon: 'trophy-outline', route: '/me/challenges', key: 'tools.challenges' },
 };
